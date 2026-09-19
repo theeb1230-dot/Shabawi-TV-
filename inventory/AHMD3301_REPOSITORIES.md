@@ -7,7 +7,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 - Destination: `theeb1230-dot/Shabawi-TV-`.
 - Ahmd3301 originals are never modified.
 - Important distinction: **49 inventoried does not mean 49 copied**.
-- Upstreams physically represented under `upstream/Ahmd3301/`: **38**.
+- Upstreams physically represented under `upstream/Ahmd3301/`: **41**.
 - Secret names/configuration contracts may be recorded, but secret values/tokens/cookies/private credentials are not committed to this public repository.
 - External Supabase/D1/Redis data is not considered transferred without authorized access to that external service.
 
@@ -19,8 +19,8 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |2|TVNAI1.github.io|dac08043fd21df27c3e9db9d12ac0048fe986e2e|Python + player HTML|REVIEW|Yes|
 |3|mediaplyr|59da5a8cdcc945858092874266b112d18188f165|Android Kotlin shell + build workflow|REVIEW|Yes|
 |4|qq|aad023f56719ac81275e6fca9124dc76ed707883|Node/Docker bypass server|SECURITY REVIEW|No|
-|5|url-shortener|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|Next.js API + Redis|DROP core|No|
-|6|snowy-mud-aaba|6000552a8c15b98378383047634ec8488e8d2a44|Cloudflare Worker/TS + SQL comments migration|DROP core|No|
+|5|url-shortener|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|Next.js API + Redis|Historical classification only|Yes (FULL: 9/9)|
+|6|snowy-mud-aaba|6000552a8c15b98378383047634ec8488e8d2a44|Cloudflare Worker/TS + SQL comments migration|Historical classification only|Yes (FULL: 10/10)|
 |7|plyr-pages|1417a44adbc444441a8b045dc22dcbc5904f2f79|Plyr/HLS/Shaka web player assets|KEEP web-player reference|Yes|
 |8|Omina|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|Static HTML|REVIEW UI|Yes|
 |9|speed-test|39de226085a733c7e4453639c71a494042de7318|FaselHD workflows; Python farm/Redis mini; benchmarks; Telegram upload|KEEP diagnostics/architecture|Yes|
@@ -63,12 +63,12 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |46|yt-info|825fa28ad1a0e877e5a5123e2ba30a967586d26e|TypeScript extraction library|OPTIONAL|Yes|
 |47|cfyb|EMPTY|Empty repository|DROP|No|
 |48|faselhdx-db|572e477d0532608f574ea41f1d160aac500f52d0|Legacy Scrapy indexer + JSON + workflow|KEEP history|Yes|
-|49|PlyrAndroid|ae5066fd6d472ed70ac24129a9a01608cf79de6b|README/LICENSE only|LICENSE/reference review|No|
+|49|PlyrAndroid|ae5066fd6d472ed70ac24129a9a01608cf79de6b|README/LICENSE only|LICENSE/reference review|Yes (FULL: 3/3)|
 
 ## Physical integration status
-There are now **38** physically represented upstream directories under `upstream/Ahmd3301/`. Representation ranges from pinned provenance/contracts to selected source, migrations and workflows; it does not imply a byte-for-byte mirror.
+There are now **41** physically represented upstream directories under `upstream/Ahmd3301/`. Representation ranges from pinned provenance/contracts to selected source, migrations and workflows; it does not imply a byte-for-byte mirror.
 
-Verified this run: 38 non-empty upstream directories are physically represented. Two upstreams (`plyrio`, `cfyb`) are EMPTY. Five small repositories were closed FULL this run by copying every observed upstream blob: TVnai 1/1, TVNAI3 1/1, TV 1/1, Netflix.github.io 1/1, my-project 2/2. Other represented repositories remain PARTIAL unless independently tree-compared.
+Verified current state: 41 non-empty upstream directories are physically represented. Two upstreams (`plyrio`, `cfyb`) are EMPTY. Eight repositories are now explicitly verified FULL from recent tree comparisons: TVnai 1/1, TVNAI3 1/1, TV 1/1, Netflix.github.io 1/1, my-project 2/2, PlyrAndroid 3/3, url-shortener 9/9, snowy-mud-aaba 10/10. Other represented repositories remain PARTIAL unless independently tree-compared.
 
 Current policy is full-upstream preservation regardless of usefulness. SOURCE.md-only directories are PARTIAL, not complete mirrors. Remaining repositories and missing raw files must be copied or explicitly marked BLOCKED/EMPTY; DROP is a historical classification only and is not a reason to omit transfer.
 
