@@ -30,31 +30,33 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |TV|main|3f6d22e45d1cff251166e83fc7089a9e3fb5bdf6|a0037b164c001859cd5c1436779d8369899a71db|1|1|0|FULL|
 |TVnai|main|f94799737839abbd580476237d1c2192f3b3b256|a0037b164c001859cd5c1436779d8369899a71db|1|1|0|FULL|
 |my-project|main|d604fb35a7d36f3dc4184d3bab29f73b6f8b000a|ce4a4c599328b4ae73498649c0706f108584085b|2|2|0|FULL|
+|TVNAI1.github.io|main|dac08043fd21df27c3e9db9d12ac0048fe986e2e|98c42622e2a3c6f2e3b594effde617aa7ee8034a|2|1|1|BLOCKED|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
 - `app`: operational source automates Cloudflare/Turnstile bypass and captures `cf_clearance`; 7 blobs remain BLOCKED.
 - `cfyt`: current tree has 10 blobs, but `src/api.ts` embeds a live-looking API credential. Raw publication is BLOCKED until a safe provenance representation can record the location/contract without republishing the value.
+- `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. The secret-bearing blob is not republished. `player.html` is mirrored byte-exact; the blocked path and reason are retained here without the secret value.
 
 ## Mirror evidence this run
-- Start main: `4e3bf3bdb981c549e13e00da7804eef6ccb57ae3`.
+- Start main: `157d216aab1e3fc6d9f0310f1b9aaf06dce2b983`.
 - Current Ahmd3301 discovery: **49 public repositories**; destination permission: `admin`.
-- Repaired byte-exact drift in `TVNAI3/README.md`, `TV/README.md`, `TVnai/README.md`, and both upstream files in `my-project`; destination blob SHAs now equal upstream blob SHAs.
-- `Netflix.github.io/README.md` was rechecked and was already byte-exact.
-- Newly recounted current upstreams: cfyt 10 blobs, yt-extract-cli 9, yt-info 11, mediaplyr 4, TVNAI3 1, Netflix.github.io 1, TV 1, TVnai 1, my-project 2.
+- Verified `TVNAI1.github.io`: default `main`, commit `dac08043fd21df27c3e9db9d12ac0048fe986e2e`, tree `98c42622e2a3c6f2e3b594effde617aa7ee8034a`, 2 expected blobs.
+- Mirrored `TVNAI1.github.io/player.html` byte-exact as blob `899c494ab21b14d8f136dbdcb2d5cbd476fb9b0d`.
+- Did not republish secret-bearing `TVNAI1.github.io/main.py`; recorded the blocked path and reason without the credential value.
 - No external database content is claimed transferred.
 
 ## Coverage snapshot
-- Inventory Coverage: **17/49 = 34.7%** current commit/tree/blob verified in the current strict table.
+- Inventory Coverage: **18/49 = 36.7%** current commit/tree/blob verified in the current strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **24/95 blobs are byte-exact**, with **20 BLOCKED** and 51 other missing/PARTIAL. The 24/95 subset is evidence, not the project-wide ratio.
-- Overall Verified Project Completion: **9.0%**. Inventory evidence and exact mirroring improved; integration/runtime/test/release evidence remains largely absent.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/97 blobs are byte-exact**, with **21 BLOCKED** and 51 other missing/PARTIAL. The 25/97 subset is evidence, not the project-wide ratio.
+- Overall Verified Project Completion: **9.1%**. Inventory/provenance evidence improved; integration/runtime/test/release evidence remains largely absent.
 
 ## Coverage policy
 Inventory Coverage is current-SHA/tree/blob verified repositories divided by the 49 repositories discovered in this run. Physical Representation counts destination upstream directories only. Raw Mirror Completeness counts only byte-identical upstream blobs; SOURCE.md is excluded unless it exists upstream. EMPTY repositories add zero to numerator and denominator. BLOCKED blobs remain in the expected denominator and are reported separately.
 
 ## P0 blockers
-1. **P0-1:** finish current commit/tree/blob recount for the remaining 32 repositories.
+1. **P0-1:** finish current commit/tree/blob recount for the remaining 31 repositories.
 2. **P0-3:** byte-exact raw mirror safe upstream blobs; preserve security exceptions explicitly.
 3. **P0-4:** re-read/resync `faselhd-db`, then large `plyr-native`.
 4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values.
