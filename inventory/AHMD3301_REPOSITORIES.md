@@ -34,6 +34,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|2|0|2|PARTIAL|
 |plyr-pages|master|1417a44adbc444441a8b045dc22dcbc5904f2f79|963eaeeb1c5223b66f2651224200a58d6a40d130|18|0|18|PARTIAL|
 |url-shortener|master|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|700d857cbbf0e006de3c67b54ad7afc3d02acc12|9|0|9|PARTIAL|
+|snowy-mud-aaba|main|6000552a8c15b98378383047634ec8488e8d2a44|33e9c63d18ae24671aa3177b371a679aed78e737|9|0|9|PARTIAL|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
@@ -42,28 +43,27 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. The secret-bearing blob is not republished. `player.html` is mirrored byte-exact; the blocked path and reason are retained here without the secret value.
 
 ## Mirror evidence this run
-- Start main: `695c8e20ede40dfd8e4f0eaad43e480b85cbdc2e`.
+- Start main: `eeeb136df03cefc989d4d497bcd187c28163603d`.
 - Destination permission rechecked: `admin`.
 - Current Ahmd3301 discovery: **49 public repositories**; no repository-count drift detected.
-- Re-verified destination baseline: all 49 upstream directories remain physically represented.
-- Verified `url-shortener`: default `master`, commit `e9f48dff78674b4c3b31fcdb3b76b259c2b2319e`, tree `700d857cbbf0e006de3c67b54ad7afc3d02acc12`, exactly 9 blobs. It is a Next.js 15.3.6 URL shortener using Upstash Redis; environment-backed Redis configuration is part of the contract, while no external Redis dataset is claimed transferred.
-- Re-tested the `Omina` byte-preserving path. Creating a destination blob from modified/reformatted text correctly produced a different SHA, so no tree/commit was created from it and `Omina` remains PARTIAL 0/2. Exact bytes, not semantic equivalence, remain the acceptance criterion.
+- Re-verified destination baseline from the current manifest: all 49 upstream directories remain physically represented.
+- Verified `snowy-mud-aaba`: default `main`, commit `6000552a8c15b98378383047634ec8488e8d2a44`, tree `33e9c63d18ae24671aa3177b371a679aed78e737`, exactly 9 blobs. It is a Cloudflare Worker + D1 template with a checked-in SQL migration (`migrations/0001_create_comments_table.sql`), TypeScript worker code, Wrangler configuration, and package lock. The D1 schema/migration is transferable; no external D1 database contents are claimed transferred.
 - No external database content is claimed transferred.
 
 ## Coverage snapshot
-- Inventory Coverage: **21/49 = 42.9%** current commit/tree/blob verified in the current strict table.
+- Inventory Coverage: **22/49 = 44.9%** current commit/tree/blob verified in the current strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/126 blobs are byte-exact = 19.8%**, with **21 BLOCKED** and 80 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
-- Overall Verified Project Completion: **9.3%**. Inventory/provenance evidence improved; integration/runtime/test/release evidence remains largely absent.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/135 blobs are byte-exact = 18.5%**, with **21 BLOCKED** and 89 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Overall Verified Project Completion: **9.4%**. Inventory/provenance and environment-contract evidence improved slightly; integration/runtime/test/release evidence remains largely absent.
 
 ## Coverage policy
 Inventory Coverage is current-SHA/tree/blob verified repositories divided by the 49 repositories discovered in this run. Physical Representation counts destination upstream directories only. Raw Mirror Completeness counts only byte-identical upstream blobs; SOURCE.md is excluded unless it exists upstream. EMPTY repositories add zero to numerator and denominator. BLOCKED blobs remain in the expected denominator and are reported separately.
 
 ## P0 blockers
-1. **P0-1:** finish current commit/tree/blob recount for the remaining 28 repositories.
+1. **P0-1:** finish current commit/tree/blob recount for the remaining 27 repositories.
 2. **P0-3:** byte-exact raw mirror safe upstream blobs; create destination blobs from exact upstream bytes before tree insertion and verify resulting SHA equality.
 3. **P0-4:** resync current `faselhd-db` snapshot after confirmed upstream drift, then large `plyr-native`.
-4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values.
+4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values; `snowy-mud-aaba` now provides a verified D1 schema/migration contract but no external D1 data transfer is claimed.
 5. **P0-7:** no Shabawi-owned integration until raw mirror/provenance reaches the allowed security boundary.
 
 ## Next-run targets
