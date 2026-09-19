@@ -4,7 +4,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 
 ## Baseline
 - Public repositories discovered this run: **49**.
-- Destination: `theeb1230-dot/Shabawi-TV-` (writable).
+- Destination: `theeb1230-dot/Shabawi-TV-` (admin/writable).
 - Ahmd3301 originals remain read-only and are never modified.
 - Secret names/contracts are inventoried; secret values/tokens/cookies/signing material are not committed to this public repository.
 - External Supabase/D1/Redis contents are not considered copied merely because a public config references them.
@@ -51,14 +51,14 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |35|KickStream-Actions-Orchestrator|05d9ceb5|Actions stream orchestrator|OPTIONAL LIVE|
 |36|TV|3f6d22e4|README-only|DROP unless docs useful|
 |37|faselhd-db|bae47dfea05c41327960716af337a341413ea28e|FaselHD/TopCinma/Ostora indexer + Supabase sync|KEEP CRITICAL; PINNED|
-|38|vplyr-live-v2|26cec450|Worker/D1 HLS live engine|KEEP HIGH|
+|38|vplyr-live-v2|26cec450d4bee06f1cee0d02899593fd4ed3bef7|Worker/D1 + FFmpeg Actions + Telegram HLS transport|KEEP CRITICAL; SELECTED LIVE BASELINE; PINNED|
 |39|VideoPlyr|a9227fcf4b78cf3e50f81aa90eb9eba73992201a|Media3/ExoPlayer + extractor/deep links|KEEP CRITICAL; PINNED reference|
 |40|kuhel-test-one|9edfa13b|built web/TON artifacts|DROP|
 |41|Netflix.github.io|c908d730|README-only|DROP|
 |42|plyrio|EMPTY|empty|DROP|
 |43|fasel-db|50e70b3d|Scrapy FaselHD indexer|KEEP historical|
 |44|FaselHDBot|e640fac0c18ea382ec3779bf0a12018af11db0b9|FaselHD HLS extraction/farm|KEEP CRITICAL; PINNED|
-|45|vplyr-live-engine|cb5f67e7|Worker/D1/Actions live HLS|KEEP CRITICAL|
+|45|vplyr-live-engine|cb5f67e78b118593457001f89d594de59a5a2c5b|earlier Worker/D1/Actions live HLS baseline|KEEP HISTORY; SUPERSEDED BY v2 FOR INTEGRATION|
 |46|yt-info|825fa28a|TS YouTube extraction library|OPTIONAL|
 |47|cfyb|EMPTY|empty|DROP|
 |48|faselhdx-db|572e477d|legacy Scrapy indexer|KEEP history only|
@@ -69,13 +69,13 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 ### Playback
 `videoplyrio-android` remains the selected Android baseline. `VideoPlyr` and `VideoPlyrApp` remain isolated extraction/player references. Unsafe upstream WebView behavior is not promoted into production.
 
-### Catalog/indexer audit completed
-`faselhd-db` is now pinned at `bae47dfea05c41327960716af337a341413ea28e`. The actual updater maintains eight FaselHD sections, parses catalog pages with Parsel/Scrapy, treats slug as identity, prepends new items, and emits per-section delta JSON. The repository also contains public JSON snapshots for FaselHD, TopCinma and Ostora.
+### Catalog/indexer
+`faselhd-db` is pinned at `bae47dfea05c41327960716af337a341413ea28e`. It provides FaselHD/TopCinma/Ostora catalog snapshots and incremental synchronization contracts. `FaselHDBot` is pinned at `e640fac0c18ea382ec3779bf0a12018af11db0b9` for episode/player/HLS extraction and farm architecture.
 
-Its Supabase synchronizer uses `SUPABASE_URL` plus a service-role/secret key from environment, batches up to 1000 rows, upserts on `(section_key,slug)`, and preserves newest-first ordering through `ord`. The operational contract is useful; secret values are not source code and are not committed into this public aggregation repository.
+### Live baseline decision
+`vplyr-live-v2` is selected and pinned at `26cec450d4bee06f1cee0d02899593fd4ed3bef7`. Compared with `vplyr-live-engine` (`cb5f67e78b118593457001f89d594de59a5a2c5b`), both retain the same initial D1 schema, package baseline and login worker, but v2 has changed/newer live Worker, runner, shared HLS/HTTP helpers, tests and workflow. The v2 runner performs three simultaneous FFmpeg renditions (1080p/720p/360p), six-second fMP4 HLS segments, bounded upload concurrency, stable-file checks and batched ingest. The Worker exposes master/variant playlists, D1-backed job/segment state, authenticated ingest/status endpoints and Telegram-backed segment proxying.
 
-### FaselHDBot audit completed
-`FaselHDBot` is pinned at `e640fac0c18ea382ec3779bf0a12018af11db0b9`. Its Node extractor parses seasons/episodes/player URLs, evaluates candidate player scripts in a constrained VM-like sandbox, derives HLS `.m3u8` candidates and falls back across multiple player URLs. Its Python farm/worker/Redis and GitHub Actions pieces are infrastructure references, not client UI code.
+The D1 schema is preserved under `upstream/Ahmd3301/vplyr-live-v2/migrations/`. It defines `users`, `jobs`, `stream_variants`, and `segments`. Secret values are not copied into Git; required secret names are recorded and must be provisioned in destination GitHub/Cloudflare secret stores. Public configuration IDs do not imply access to external D1 contents.
 
 ### Imported isolated references
 - `upstream/Ahmd3301/VideoPlyr/` — pinned.
@@ -83,11 +83,12 @@ Its Supabase synchronizer uses `SUPABASE_URL` plus a service-role/secret key fro
 - `upstream/Ahmd3301/VideoPlyrApp/` — pinned; native extractor reference.
 - `upstream/Ahmd3301/faselhd-db/` — pinned; catalog/Supabase contract reference.
 - `upstream/Ahmd3301/FaselHDBot/` — pinned; extraction/farm source record.
+- `upstream/Ahmd3301/vplyr-live-v2/` — pinned; selected live schema/HLS contract reference.
 
 Environment/database contracts remain in `inventory/ENVIRONMENT_AND_DATABASES.md`.
 
 ## Next integration order
-1. Compare `vplyr-live-engine` vs `vplyr-live-v2`; select one live baseline and preserve D1 migrations separately.
-2. Build Shabawi-owned provider interfaces for catalog/search/details/episodes/playback sources rather than coupling the app directly to scraper scripts.
-3. Build the Shabawi Android adapter/player layer outside `upstream/`, combining direct routing + native extraction with hardened fallback.
-4. Continue deep review of remaining REVIEW/SECURITY REVIEW repositories and delete only redundant copies from the Shabawi aggregation tree, never from Ahmd3301 originals.
+1. Build Shabawi-owned provider interfaces for catalog/search/details/episodes/playback sources and live channels rather than coupling client UI directly to scraper/Worker internals.
+2. Build the Shabawi Android adapter/player layer outside `upstream/`, combining direct routing + native extraction with hardened fallback.
+3. Deep-audit `ostora-edge-api` and reconcile its API contracts with `faselhd-db` before implementing the unified catalog provider.
+4. Continue REVIEW/SECURITY REVIEW repositories and remove only redundant copies from the Shabawi aggregation tree, never from Ahmd3301 originals.
