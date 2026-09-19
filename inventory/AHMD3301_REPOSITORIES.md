@@ -13,7 +13,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 ## Current-run verified records
 |Repository|Default branch|Current commit|Tree|Expected blobs|Transferred exact|Missing|State|
 |---|---|---|---|---:|---:|---:|---|
-|PlyrAndroid|main|ae5066fd6d472ed70ac24129a9a01608cf79de6b|verified previously|3|3|0|FULL|
+|PlyrAndroid|main|ae5066fd6d472ed70ac24129a9a01608cf79de6b|955b034b78ac6cd9f84864eced0ea9ef2b98fcf6|3|3|0|FULL|
 |TVNAI2|main|5a74aaa0a7985b8a12e68460164f9bd86e8bbb92|8588e70fe38f2c092a760479c627cf5aeb53baad|3|3|0|FULL|
 |FaselHD.DB|main|fa2dc0489beb7848d03f664637fa724796671acd|1c3e6fc779f47d545861c2d5ce43a42a5175d15a|12|12|0|FULL|
 |NETFLIX|main|ca734f4ebb0cfcd5732c06257b1281c9a5fd0153|510fbbfe258490917c1507ca36ec3d69fabc4b84|3|0|3|BLOCKED|
@@ -37,6 +37,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |snowy-mud-aaba|main|6000552a8c15b98378383047634ec8488e8d2a44|33e9c63d18ae24671aa3177b371a679aed78e737|9|0|9|PARTIAL|
 |FaselHDBot|main|e640fac0c18ea382ec3779bf0a12018af11db0b9|c2b31a0fea507e01b6bba1f7d649041822d9a1f6|11|0|11|PARTIAL|
 |speed-test|main|39de226085a733c7e4453639c71a494042de7318|2668e6b028e2386c0e88b775c99a71eb2b81649d|16|0|16|PARTIAL|
+|vplyr-live-v2|main|26cec450d4bee06f1cee0d02899593fd4ed3bef7|da8fe559da4865e45c96cc1662a2d4c00b0ccdd0|14|0|14|PARTIAL|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
@@ -45,25 +46,26 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. The secret-bearing blob is not republished. `player.html` is mirrored byte-exact; the blocked path and reason are retained here without the secret value.
 
 ## Mirror evidence this run
-- Start main: `3a8532d2f4286acf5d2c0760594d060a284b356c`.
+- Start main: `fbb674ced753226665c956bed21b45712c2a296c`.
 - Destination permission rechecked: `admin`.
 - Current Ahmd3301 discovery: **49 public repositories**; no repository-count drift detected.
 - Re-verified destination baseline from the current manifest: all 49 upstream directories remain physically represented.
-- Verified `speed-test`: default `main`, commit `39de226085a733c7e4453639c71a494042de7318`, tree `2668e6b028e2386c0e88b775c99a71eb2b81649d`, exactly 16 blobs in a non-truncated recursive tree. The snapshot contains five Actions workflows, documentation/results, a JS extractor, a three-file farm including a Redis-compatible component, and four scripts. This is code/configuration evidence only; no external Redis/Telegram state is claimed transferred.
-- No external database content is claimed transferred.
+- Re-verified `PlyrAndroid`: default `main`, commit `ae5066fd6d472ed70ac24129a9a01608cf79de6b`, tree `955b034b78ac6cd9f84864eced0ea9ef2b98fcf6`, exactly 3 blobs. Destination `.gitignore`, `LICENSE`, and `README.md` have the same three upstream blob SHAs, so the repository remains FULL 3/3 with MIT attribution intact.
+- Verified `vplyr-live-v2`: default `main`, commit `26cec450d4bee06f1cee0d02899593fd4ed3bef7`, tree `da8fe559da4865e45c96cc1662a2d4c00b0ccdd0`, exactly 14 blobs in a non-truncated recursive tree. It includes a GitHub Actions live pipeline, D1 migration, Cloudflare Worker live/login code, HLS helpers, tests, Wrangler configs, and a concurrent live runner. Existing destination `migrations/0001_initial.sql` and `src/shared/hls.js` have different blob SHAs from the current upstream, while SOURCE.md is destination metadata rather than an upstream blob; therefore current raw status is PARTIAL 0/14, not FULL.
+- No external D1/database content is claimed transferred; checked-in migration/configuration only proves the contract/schema.
 
 ## Coverage snapshot
-- Inventory Coverage: **24/49 = 49.0%** current commit/tree/blob verified in the current strict table.
+- Inventory Coverage: **25/49 = 51.0%** current commit/tree/blob verified in the current strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/162 blobs are byte-exact = 15.4%**, with **21 BLOCKED** and 116 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
-- Overall Verified Project Completion: **9.6%**. Inventory/provenance evidence improved; integration/runtime/test/release evidence remains largely absent.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/176 blobs are byte-exact = 14.2%**, with **21 BLOCKED** and 130 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Overall Verified Project Completion: **9.7%**. Inventory/provenance and environment-contract evidence improved; integration/runtime/test/release evidence remains largely absent.
 
 ## Coverage policy
 Inventory Coverage is current-SHA/tree/blob verified repositories divided by the 49 repositories discovered in this run. Physical Representation counts destination upstream directories only. Raw Mirror Completeness counts only byte-identical upstream blobs; SOURCE.md is excluded unless it exists upstream. EMPTY repositories add zero to numerator and denominator. BLOCKED blobs remain in the expected denominator and are reported separately.
 
 ## P0 blockers
-1. **P0-1:** finish current commit/tree/blob recount for the remaining 25 repositories.
-2. **P0-3:** byte-exact raw mirror safe upstream blobs; create destination blobs from exact upstream bytes before tree insertion and verify resulting SHA equality.
+1. **P0-1:** finish current commit/tree/blob recount for the remaining 24 repositories.
+2. **P0-3:** byte-exact raw mirror safe upstream blobs; current `vplyr-live-v2` proves existing destination files can drift and must be compared by blob SHA rather than filename/content intent.
 3. **P0-4:** resync current `faselhd-db` snapshot after confirmed upstream drift, then large `plyr-native`.
 4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values; external state is never inferred from checked-in configuration.
 5. **P0-7:** no Shabawi-owned integration until raw mirror/provenance reaches the allowed security boundary.
