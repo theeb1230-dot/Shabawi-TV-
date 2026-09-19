@@ -33,7 +33,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |17|Play|5f592d62|static player/test HTML|REVIEW|
 |18|my-website|f578c388|mirrored static web assets|DROP core|
 |19|test|b65eb12d|Android WebView/Plyr/Shaka prototype|KEEP reference|
-|20|ostora-edge-api|5bc7eaa0|edge API + series routes + UI|KEEP HIGH|
+|20|ostora-edge-api|5bc7eaa0835650ecf8f157482c6b54bf3f02cae5|Cloudflare Pages Functions adapter + Arabic RTL PWA; series/rseries/moviesar/sports routes; XOR-normalized catalog/episode/live responses|KEEP HIGH; PINNED PROVIDER REFERENCE; server-side adaptation only|
 |21|api123|8078bcef|HTML apps/player assets|UI review only|
 |22|yt-telegram-bot|b0d976af|Worker + Redis + Actions media pipeline|KEEP architecture|
 |23|video-player|4b766838|Capacitor/Android player|REVIEW|
@@ -72,10 +72,16 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 ### Catalog/indexer
 `faselhd-db` is pinned at `bae47dfea05c41327960716af337a341413ea28e`. It provides FaselHD/TopCinma/Ostora catalog snapshots and incremental synchronization contracts. `FaselHDBot` is pinned at `e640fac0c18ea382ec3779bf0a12018af11db0b9` for episode/player/HLS extraction and farm architecture.
 
+### Ostora edge audit
+`ostora-edge-api` is now pinned at `5bc7eaa0835650ecf8f157482c6b54bf3f02cae5` and recorded under `upstream/Ahmd3301/ostora-edge-api/`. Its Cloudflare Pages Functions expose `series`, `rseries`, `moviesar`, and `sports` routes. Catalog responses normalize to `id/name/thumbnail`; ID routes normalize episode/live records to `id/number/title/url/thumbnail/agent`. Catalog cache TTL is 3 hours and episode/live TTL is 1 hour. The upstream embeds source-specific endpoint/device/XOR configuration and wildcard CORS, so it is retained as a provider reference rather than promoted verbatim into production.
+
 ### Live baseline decision
 `vplyr-live-v2` is selected and pinned at `26cec450d4bee06f1cee0d02899593fd4ed3bef7`. Compared with `vplyr-live-engine` (`cb5f67e78b118593457001f89d594de59a5a2c5b`), both retain the same initial D1 schema, package baseline and login worker, but v2 has changed/newer live Worker, runner, shared HLS/HTTP helpers, tests and workflow. The v2 runner performs three simultaneous FFmpeg renditions (1080p/720p/360p), six-second fMP4 HLS segments, bounded upload concurrency, stable-file checks and batched ingest. The Worker exposes master/variant playlists, D1-backed job/segment state, authenticated ingest/status endpoints and Telegram-backed segment proxying.
 
 The D1 schema is preserved under `upstream/Ahmd3301/vplyr-live-v2/migrations/`. It defines `users`, `jobs`, `stream_variants`, and `segments`. Secret values are not copied into Git; required secret names are recorded and must be provisioned in destination GitHub/Cloudflare secret stores. Public configuration IDs do not imply access to external D1 contents.
+
+### Shabawi-owned provider boundary
+`docs/PROVIDER_CONTRACT.md` now defines stable `CatalogItem`, `Episode`, `PlaybackSource`, and `LiveChannel` models plus catalog/search/details/episodes/playback/live/health operations. This keeps Android/TV/iOS/Web clients independent of scraper HTML, Supabase service credentials, D1 internals, Telegram transport, source-specific XOR logic, and other upstream implementation details.
 
 ### Imported isolated references
 - `upstream/Ahmd3301/VideoPlyr/` — pinned.
@@ -84,11 +90,12 @@ The D1 schema is preserved under `upstream/Ahmd3301/vplyr-live-v2/migrations/`. 
 - `upstream/Ahmd3301/faselhd-db/` — pinned; catalog/Supabase contract reference.
 - `upstream/Ahmd3301/FaselHDBot/` — pinned; extraction/farm source record.
 - `upstream/Ahmd3301/vplyr-live-v2/` — pinned; selected live schema/HLS contract reference.
+- `upstream/Ahmd3301/ostora-edge-api/` — pinned; provider/API contract reference.
 
 Environment/database contracts remain in `inventory/ENVIRONMENT_AND_DATABASES.md`.
 
 ## Next integration order
-1. Build Shabawi-owned provider interfaces for catalog/search/details/episodes/playback sources and live channels rather than coupling client UI directly to scraper/Worker internals.
-2. Build the Shabawi Android adapter/player layer outside `upstream/`, combining direct routing + native extraction with hardened fallback.
-3. Deep-audit `ostora-edge-api` and reconcile its API contracts with `faselhd-db` before implementing the unified catalog provider.
+1. Implement the first Shabawi-owned provider adapter outside `upstream/`, starting with repository-backed catalog snapshots so it can be tested without external credentials.
+2. Add provider contract tests for normalization, failure isolation, URL validation and fallback ordering.
+3. Build the Shabawi Android adapter/player layer combining direct routing + native extraction with hardened fallback.
 4. Continue REVIEW/SECURITY REVIEW repositories and remove only redundant copies from the Shabawi aggregation tree, never from Ahmd3301 originals.
