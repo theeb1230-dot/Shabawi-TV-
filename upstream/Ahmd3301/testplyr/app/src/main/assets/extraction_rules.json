@@ -1,0 +1,6 @@
+{
+  "remote_config_version": 1,
+  "extraction_script": "(function() { var btns = document.querySelectorAll('button[data-url*=\".m3u8\"], button.hd_btn'); for (var i = 0; i < btns.length; i++) { var u = btns[i].getAttribute('data-url') || btns[i].getAttribute('data-src'); if (u && u.indexOf('.m3u8') !== -1) return u; } var src = document.querySelector('video source[src*=\".m3u8\"]'); if (src) return src.getAttribute('src'); var vid = document.querySelector('video[src*=\".m3u8\"]'); if (vid) return vid.getAttribute('src'); return null; })()",
+  "blocked_extensions": [".jpg",".jpeg",".png",".gif",".webp",".svg",".css",".woff",".woff2",".ttf",".eot",".ico",".pdf"],
+  "blocked_domains": ["google-analytics","doubleclick","googlesyndication","facebook.net","connect.facebook","analytics","popunder","popads","exoclick","mgid.com","taboola","outbrain"]
+}
