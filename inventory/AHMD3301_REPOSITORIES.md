@@ -2,100 +2,80 @@
 
 Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 
-## Baseline
+## Verified baseline
 - Public repositories discovered this run: **49**.
-- Destination: `theeb1230-dot/Shabawi-TV-` (admin/writable).
-- Ahmd3301 originals remain read-only and are never modified.
-- Secret names/contracts are inventoried; secret values/tokens/cookies/signing material are not committed to this public repository.
-- External Supabase/D1/Redis contents are not considered copied merely because a public config references them.
-- Every reused upstream is isolated and pinned to an exact SHA.
+- Destination: `theeb1230-dot/Shabawi-TV-`.
+- Ahmd3301 originals are never modified.
+- Important distinction: **49 inventoried does not mean 49 copied**.
+- Upstreams physically represented under `upstream/Ahmd3301/`: **7**.
+- Secret names/configuration contracts may be recorded, but secret values/tokens/cookies/private credentials are not committed to this public repository.
+- External Supabase/D1/Redis data is not considered transferred without authorized access to that external service.
 
-## Complete repository inventory
+## Complete inventory verified from current repository trees
 
-|#|Repository|Tree SHA/state|Role|Decision|
-|---:|---|---|---|---|
-|1|testplyr|0d4d693d|Android player/extraction prototype|KEEP reference|
-|2|TVNAI1.github.io|dac08043|Python/player HTML experiment|REVIEW|
-|3|mediaplyr|59da5a8c|Android player shell|REVIEW|
-|4|qq|aad023f5|Node bypass/server experiment|SECURITY REVIEW|
-|5|url-shortener|e9f48dff|Next.js + Redis URL shortener|DROP core|
-|6|snowy-mud-aaba|6000552a|Cloudflare Worker + SQL comments|DROP core|
-|7|plyr-pages|1417a44a|Plyr/HLS/Shaka web player|KEEP|
-|8|Omina|a75a1c9f|static HTML experiment|REVIEW|
-|9|speed-test|39de2260|FaselHD benchmark/extraction farm|KEEP diagnostics|
-|10|abcd|a29663f5|Node bypass/server experiment|SECURITY REVIEW|
-|11|TVnai|f9479973|README-only|DROP unless docs add value|
-|12|faselhd|1fd2cf49|JSON data|KEEP data reference|
-|13|plyr-native|cf4dbbd9|Plyr-to-native generators|KEEP generators; exclude node_modules|
-|14|cfyt|3924dd6e|Cloudflare/TS YouTube extractor|OPTIONAL|
-|15|my-project|d604fb35|devcontainer/README|DROP|
-|16|videoplyrio-android|51edaaf5cb4904a4109e5dfa5ddc4d3b3dbbb414|Compose/Media3 player, router, native+WebView extraction, PiP|KEEP HIGH; SELECTED ANDROID BASELINE|
-|17|Play|5f592d62|static player/test HTML|REVIEW|
-|18|my-website|f578c388|mirrored static web assets|DROP core|
-|19|test|b65eb12d|Android WebView/Plyr/Shaka prototype|KEEP reference|
-|20|ostora-edge-api|5bc7eaa0835650ecf8f157482c6b54bf3f02cae5|Cloudflare Pages Functions adapter + Arabic RTL PWA; series/rseries/moviesar/sports routes; XOR-normalized catalog/episode/live responses|KEEP HIGH; PINNED PROVIDER REFERENCE; server-side adaptation only|
-|21|api123|8078bcef|HTML apps/player assets|UI review only|
-|22|yt-telegram-bot|b0d976af|Worker + Redis + Actions media pipeline|KEEP architecture|
-|23|video-player|4b766838|Capacitor/Android player|REVIEW|
-|24|TVNAI3|f92e8ccc|README-only|DROP unless docs useful|
-|25|yt-extract-cli|b0244b3f|YouTube extraction CLI|OPTIONAL|
-|26|video.plyr.io|c6f2220f|Android WebView HLS/Plyr/Shaka|KEEP reference|
-|27|TVNAI2|5a74aaa0|small static UI|REVIEW|
-|28|Plyr.io|81432335|Android Plyr shell|REVIEW|
-|29|FaselHD.DB|fa2dc048|legacy scraper + JSON + Action|KEEP history/data|
-|30|app|4a9222fb|Node Docker bypass/server|SECURITY REVIEW|
-|31|plyr|27765233|Android player shell|REVIEW|
-|32|NETFLIX|ca734f4e|Netflix-style static UI|UI review|
-|33|VideoPlyrApp|ca34d1dcb86ed8dd8151de2e04c025254ee20f75|Media3 player + OkHttp native Packer extractor|KEEP selected extractor reference; PINNED|
-|34|NAI.github.io|917c6f5c|Jekyll Pages scaffold|DROP core|
-|35|KickStream-Actions-Orchestrator|05d9ceb5|Actions stream orchestrator|OPTIONAL LIVE|
-|36|TV|3f6d22e4|README-only|DROP unless docs useful|
-|37|faselhd-db|bae47dfea05c41327960716af337a341413ea28e|FaselHD/TopCinma/Ostora indexer + Supabase sync|KEEP CRITICAL; PINNED|
-|38|vplyr-live-v2|26cec450d4bee06f1cee0d02899593fd4ed3bef7|Worker/D1 + FFmpeg Actions + Telegram HLS transport|KEEP CRITICAL; SELECTED LIVE BASELINE; PINNED|
-|39|VideoPlyr|a9227fcf4b78cf3e50f81aa90eb9eba73992201a|Media3/ExoPlayer + extractor/deep links|KEEP CRITICAL; PINNED reference|
-|40|kuhel-test-one|9edfa13b|built web/TON artifacts|DROP|
-|41|Netflix.github.io|c908d730|README-only|DROP|
-|42|plyrio|EMPTY|empty|DROP|
-|43|fasel-db|50e70b3d|Scrapy FaselHD indexer|KEEP historical|
-|44|FaselHDBot|e640fac0c18ea382ec3779bf0a12018af11db0b9|FaselHD HLS extraction/farm|KEEP CRITICAL; PINNED|
-|45|vplyr-live-engine|cb5f67e78b118593457001f89d594de59a5a2c5b|earlier Worker/D1/Actions live HLS baseline|KEEP HISTORY; SUPERSEDED BY v2 FOR INTEGRATION|
-|46|yt-info|825fa28a|TS YouTube extraction library|OPTIONAL|
-|47|cfyb|EMPTY|empty|DROP|
-|48|faselhdx-db|572e477d|legacy Scrapy indexer|KEEP history only|
-|49|PlyrAndroid|ae5066fd|README/LICENSE|LICENSE REVIEW|
+|#|Repository|Exact tree SHA/state|Observed code/assets|Shabawi decision|Physical upstream copy|
+|---:|---|---|---|---|---|
+|1|testplyr|0d4d693ddb342d453e04603107052a343ff2b1b8|Android/Compose; player assets; extraction rules; env example; tests; debug APK|KEEP HIGH reference|No|
+|2|TVNAI1.github.io|dac08043fd21df27c3e9db9d12ac0048fe986e2e|Python + player HTML|REVIEW|No|
+|3|mediaplyr|59da5a8cdcc945858092874266b112d18188f165|Android Kotlin shell + build workflow|REVIEW|No|
+|4|qq|aad023f56719ac81275e6fca9124dc76ed707883|Node/Docker bypass server|SECURITY REVIEW|No|
+|5|url-shortener|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|Next.js API + Redis|DROP core|No|
+|6|snowy-mud-aaba|6000552a8c15b98378383047634ec8488e8d2a44|Cloudflare Worker/TS + SQL comments migration|DROP core|No|
+|7|plyr-pages|1417a44adbc444441a8b045dc22dcbc5904f2f79|Plyr/HLS/Shaka web player assets|KEEP web-player reference|No|
+|8|Omina|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|Static HTML|REVIEW UI|No|
+|9|speed-test|39de226085a733c7e4453639c71a494042de7318|FaselHD workflows; Python farm/Redis mini; benchmarks; Telegram upload|KEEP diagnostics/architecture|No|
+|10|abcd|a29663f564694e7b43db77e6662d83e0318a11ea|Node/Docker bypass server|SECURITY REVIEW|No|
+|11|TVnai|f94799737839abbd580476237d1c2192f3b3b256|README only|DROP code|No|
+|12|faselhd|1fd2cf4992eb616647188f564f64b0dee7a9da54|JSON datasets|KEEP data reference|No|
+|13|plyr-native|cf4dbbd9dd87d64f5fa1a1d36c4bc7d933c55bcc|JS generators converting Plyr assets toward Compose; workflow; vendored node_modules|KEEP generators, exclude node_modules|No|
+|14|cfyt|3924dd6ea15daac83b35b48e4e7c414041d7614b|Cloudflare/TypeScript extractor library/worker|OPTIONAL provider|No|
+|15|my-project|d604fb35a7d36f3dc4184d3bab29f73b6f8b000a|Devcontainer + README|DROP|No|
+|16|videoplyrio-android|51edaaf5cb4904a4109e5dfa5ddc4d3b3dbbb414|Compose/Media3 player, router, extraction, PiP|KEEP CRITICAL; Android baseline|Yes|
+|17|Play|5f592d62b079d6335f3ce0db8b60bfd02c77e2b3|Static player/test HTML|REVIEW|No|
+|18|my-website|f578c3883737035a5b8f84d1c7fa5a2798a62638|Mirrored static web/analytics assets|DROP core|No|
+|19|test|b65eb12d0cd228f1e0acd043d9f645a6e300c0c4|Android WebView/Plyr/Shaka + workflow|KEEP reference|No|
+|20|ostora-edge-api|5bc7eaa0835650ecf8f157482c6b54bf3f02cae5|Cloudflare Pages Functions provider + RTL PWA|KEEP HIGH provider reference|Yes|
+|21|api123|8078bcefecd146ac76faffb603a90d2363b069f8|HTML apps, Quran audio JSON, media UI SVGs|UI/content review|No|
+|22|yt-telegram-bot|b0d976afd447dbfdc85f29afb933864954df9d50|Worker/TS + Redis + Telegram + GitHub Actions pipeline|KEEP architecture|No|
+|23|video-player|4b7668389372d3277ccb35f5defd5627d046c099|Capacitor/Android + HTML player + workflow|REVIEW|No|
+|24|TVNAI3|f92e8cccef53df3c712ae2848b0deec9c2734265|README only|DROP code|No|
+|25|yt-extract-cli|b0244b3f6c4c2d4da505fa54aed42b1f197615ac|TypeScript extraction CLI|OPTIONAL tooling|No|
+|26|video.plyr.io|c6f2220f2549c7f213065c9561e1bd8af3e9d35d|Android WebView HLS/Plyr/Shaka + workflow|KEEP reference|No|
+|27|TVNAI2|5a74aaa0a7985b8a12e68460164f9bd86e8bbb92|Small HTML/CSS/JS UI|REVIEW UI|No|
+|28|Plyr.io|81432335b1b53fa0d6677f25be89c04623507a5a|Android Kotlin Plyr shell + workflow|REVIEW|No|
+|29|FaselHD.DB|fa2dc0489beb7848d03f664637fa724796671acd|Python scraper + category JSON + scheduled workflow|KEEP history/data|No|
+|30|app|4a9222fba7f37af899bffdab3a84e04836615d99|Node/Docker bypass server|SECURITY REVIEW|No|
+|31|plyr|27765233549c82c86ae82a08e48664cec373c704|Android Kotlin player shell + workflow|REVIEW|No|
+|32|NETFLIX|ca734f4ebb0cfcd5732c06257b1281c9a5fd0153|Static Netflix-style UI|UI reference|No|
+|33|VideoPlyrApp|ca34d1dcb86ed8dd8151de2e04c025254ee20f75|Media3 player + native extractor|KEEP HIGH extractor reference|Yes|
+|34|NAI.github.io|917c6f5caa8b9a7d1337001d982e84b36f102515|Jekyll/Pages scaffold + workflow|DROP core|No|
+|35|KickStream-Actions-Orchestrator|05d9ceb500279fe82723aed6e2a3a95d6f0fd7ba|GitHub Actions stream orchestrator|OPTIONAL live|No|
+|36|TV|3f6d22e45d1cff251166e83fc7089a9e3fb5bdf6|README only|DROP code|No|
+|37|faselhd-db|bae47dfea05c41327960716af337a341413ea28e|FaselHD/TopCinma/Ostora indexer, snapshots, Supabase sync, tests/workflow|KEEP CRITICAL|Yes|
+|38|vplyr-live-v2|26cec450d4bee06f1cee0d02899593fd4ed3bef7|Worker/D1 + FFmpeg Actions + Telegram HLS transport|KEEP CRITICAL; live baseline|Yes|
+|39|VideoPlyr|a9227fcf4b78cf3e50f81aa90eb9eba73992201a|Media3/ExoPlayer + extraction/deep links|KEEP CRITICAL reference|Yes|
+|40|kuhel-test-one|9edfa13be71def772a6b397b25a8fa7c87b43c87|Built web/TON artifacts|DROP core|No|
+|41|Netflix.github.io|c908d73092fc779d43afebe35a821a48a3eb7a1e|README only|DROP code|No|
+|42|plyrio|EMPTY|Empty repository|DROP|No|
+|43|fasel-db|50e70b3d5cd06c25b6bfd4ab1c5075a09966c07d|Scrapy FaselHD spiders + JSON + workflow|KEEP historical/reference|No|
+|44|FaselHDBot|e640fac0c18ea382ec3779bf0a12018af11db0b9|FaselHD HLS extraction/farm|KEEP CRITICAL|Yes|
+|45|vplyr-live-engine|cb5f67e78b118593457001f89d594de59a5a2c5b|Earlier Worker/D1/Actions HLS engine|KEEP history; superseded by v2|No|
+|46|yt-info|825fa28ad1a0e877e5a5123e2ba30a967586d26e|TypeScript extraction library|OPTIONAL|No|
+|47|cfyb|EMPTY|Empty repository|DROP|No|
+|48|faselhdx-db|572e477d0532608f574ea41f1d160aac500f52d0|Legacy Scrapy indexer + JSON + workflow|KEEP history|No|
+|49|PlyrAndroid|ae5066fd6d472ed70ac24129a9a01608cf79de6b|README/LICENSE only|LICENSE/reference review|No|
 
-## Integration progress
+## Physical integration status
+The seven directories currently present under `upstream/Ahmd3301/` are:
+`FaselHDBot`, `VideoPlyr`, `VideoPlyrApp`, `faselhd-db`, `ostora-edge-api`, `videoplyrio-android`, and `vplyr-live-v2`.
 
-### Playback
-`videoplyrio-android` remains the selected Android baseline. `VideoPlyr` and `VideoPlyrApp` remain isolated extraction/player references. Unsafe upstream WebView behavior is not promoted into production.
+This file deliberately does **not** claim that all 49 repositories have been copied. Repositories marked KEEP but not yet physically represented remain integration work. Repositories marked DROP are retained here as audit evidence rather than copied merely to inflate a directory count.
 
-### Catalog/indexer
-`faselhd-db` is pinned at `bae47dfea05c41327960716af337a341413ea28e`. It provides FaselHD/TopCinma/Ostora catalog snapshots and incremental synchronization contracts. `FaselHDBot` is pinned at `e640fac0c18ea382ec3779bf0a12018af11db0b9` for episode/player/HLS extraction and farm architecture.
+## Environment/database policy
+Copy public schemas, migrations, example environment files, variable names, and configuration contracts when useful. Never commit live secret values, private tokens, cookies, signing material, or credentials into this public repository. External Supabase/D1/Redis contents require separately authorized access before they can truthfully be recorded as transferred.
 
-### Ostora edge audit
-`ostora-edge-api` is now pinned at `5bc7eaa0835650ecf8f157482c6b54bf3f02cae5` and recorded under `upstream/Ahmd3301/ostora-edge-api/`. Its Cloudflare Pages Functions expose `series`, `rseries`, `moviesar`, and `sports` routes. Catalog responses normalize to `id/name/thumbnail`; ID routes normalize episode/live records to `id/number/title/url/thumbnail/agent`. Catalog cache TTL is 3 hours and episode/live TTL is 1 hour. The upstream embeds source-specific endpoint/device/XOR configuration and wildcard CORS, so it is retained as a provider reference rather than promoted verbatim into production.
-
-### Live baseline decision
-`vplyr-live-v2` is selected and pinned at `26cec450d4bee06f1cee0d02899593fd4ed3bef7`. Compared with `vplyr-live-engine` (`cb5f67e78b118593457001f89d594de59a5a2c5b`), both retain the same initial D1 schema, package baseline and login worker, but v2 has changed/newer live Worker, runner, shared HLS/HTTP helpers, tests and workflow. The v2 runner performs three simultaneous FFmpeg renditions (1080p/720p/360p), six-second fMP4 HLS segments, bounded upload concurrency, stable-file checks and batched ingest. The Worker exposes master/variant playlists, D1-backed job/segment state, authenticated ingest/status endpoints and Telegram-backed segment proxying.
-
-The D1 schema is preserved under `upstream/Ahmd3301/vplyr-live-v2/migrations/`. It defines `users`, `jobs`, `stream_variants`, and `segments`. Secret values are not copied into Git; required secret names are recorded and must be provisioned in destination GitHub/Cloudflare secret stores. Public configuration IDs do not imply access to external D1 contents.
-
-### Shabawi-owned provider boundary
-`docs/PROVIDER_CONTRACT.md` now defines stable `CatalogItem`, `Episode`, `PlaybackSource`, and `LiveChannel` models plus catalog/search/details/episodes/playback/live/health operations. This keeps Android/TV/iOS/Web clients independent of scraper HTML, Supabase service credentials, D1 internals, Telegram transport, source-specific XOR logic, and other upstream implementation details.
-
-### Imported isolated references
-- `upstream/Ahmd3301/VideoPlyr/` — pinned.
-- `upstream/Ahmd3301/videoplyrio-android/` — pinned; router/native unpacker reference.
-- `upstream/Ahmd3301/VideoPlyrApp/` — pinned; native extractor reference.
-- `upstream/Ahmd3301/faselhd-db/` — pinned; catalog/Supabase contract reference.
-- `upstream/Ahmd3301/FaselHDBot/` — pinned; extraction/farm source record.
-- `upstream/Ahmd3301/vplyr-live-v2/` — pinned; selected live schema/HLS contract reference.
-- `upstream/Ahmd3301/ostora-edge-api/` — pinned; provider/API contract reference.
-
-Environment/database contracts remain in `inventory/ENVIRONMENT_AND_DATABASES.md`.
-
-## Next integration order
-1. Implement the first Shabawi-owned provider adapter outside `upstream/`, starting with repository-backed catalog snapshots so it can be tested without external credentials.
-2. Add provider contract tests for normalization, failure isolation, URL validation and fallback ordering.
-3. Build the Shabawi Android adapter/player layer combining direct routing + native extraction with hardened fallback.
-4. Continue REVIEW/SECURITY REVIEW repositories and remove only redundant copies from the Shabawi aggregation tree, never from Ahmd3301 originals.
+## Next integration batch
+1. Import the useful, non-redundant source from `testplyr`, `plyr-pages`, `speed-test`, `faselhd`, `plyr-native`, `test`, `yt-telegram-bot`, `video.plyr.io`, `FaselHD.DB`, and `fasel-db`, each isolated and pinned.
+2. Keep generated binaries, vendored `node_modules`, duplicated player libraries, and credential material out of the aggregation tree.
+3. Continue security review of `qq`, `abcd`, and `app` before any reuse.
+4. Promote only proven components from upstream isolation into Shabawi-owned provider/player code.
