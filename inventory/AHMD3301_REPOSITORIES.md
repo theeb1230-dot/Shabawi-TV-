@@ -7,7 +7,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 - Destination: `theeb1230-dot/Shabawi-TV-`.
 - Ahmd3301 originals are never modified.
 - Important distinction: **49 inventoried does not mean 49 copied**.
-- Upstreams physically represented under `upstream/Ahmd3301/`: **32**.
+- Upstreams physically represented under `upstream/Ahmd3301/`: **33**.
 - Secret names/configuration contracts may be recorded, but secret values/tokens/cookies/private credentials are not committed to this public repository.
 - External Supabase/D1/Redis data is not considered transferred without authorized access to that external service.
 
@@ -54,7 +54,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |37|faselhd-db|bae47dfea05c41327960716af337a341413ea28e|FaselHD/TopCinma/Ostora indexer, snapshots, Supabase sync, tests/workflow|KEEP CRITICAL|Yes|
 |38|vplyr-live-v2|26cec450d4bee06f1cee0d02899593fd4ed3bef7|Worker/D1 + FFmpeg Actions + Telegram HLS transport|KEEP CRITICAL; live baseline|Yes|
 |39|VideoPlyr|a9227fcf4b78cf3e50f81aa90eb9eba73992201a|Media3/ExoPlayer + extraction/deep links|KEEP CRITICAL reference|Yes|
-|40|kuhel-test-one|9edfa13be71def772a6b397b25a8fa7c87b43c87|Built web/TON artifacts|DROP core|No|
+|40|kuhel-test-one|9edfa13be71def772a6b397b25a8fa7c87b43c87|Built web/TON artifacts|DROP core|Yes|
 |41|Netflix.github.io|c908d73092fc779d43afebe35a821a48a3eb7a1e|README only|DROP code|No|
 |42|plyrio|EMPTY|Empty repository|DROP|No|
 |43|fasel-db|50e70b3d5cd06c25b6bfd4ab1c5075a09966c07d|Scrapy FaselHD spiders + JSON + workflow|KEEP historical/reference|Yes|
@@ -66,11 +66,11 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-19.
 |49|PlyrAndroid|ae5066fd6d472ed70ac24129a9a01608cf79de6b|README/LICENSE only|LICENSE/reference review|No|
 
 ## Physical integration status
-There are now **32** physically represented upstream directories under `upstream/Ahmd3301/`. Representation ranges from pinned provenance/contracts to selected source, migrations and workflows; it does not imply a byte-for-byte mirror.
+There are now **33** physically represented upstream directories under `upstream/Ahmd3301/`. Representation ranges from pinned provenance/contracts to selected source, migrations and workflows; it does not imply a byte-for-byte mirror.
 
 Physically represented: 32 reviewed upstream directories. See the table above for exact per-repository physical status; representation ranges from pinned SOURCE provenance to selected source, schemas, workflows and migrations.
 
-Repositories marked DROP remain inventory evidence rather than being copied just to inflate the directory count. KEEP/REVIEW repositories not represented remain integration work.
+Current policy is full-upstream preservation regardless of usefulness. SOURCE.md-only directories are PARTIAL, not complete mirrors. Remaining repositories and missing raw files must be copied or explicitly marked BLOCKED/EMPTY; DROP is a historical classification only and is not a reason to omit transfer.
 
 ## Environment/database policy
 Copy public schemas, migrations, example environment files, variable names, and configuration contracts when useful. Never commit live secret values, private tokens, cookies, signing material, or credentials into this public repository. External Supabase/D1/Redis contents require separately authorized access before they can truthfully be recorded as transferred.
