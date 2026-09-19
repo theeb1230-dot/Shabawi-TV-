@@ -1,0 +1,16 @@
+{
+  "compatibility_date": "2024-11-01",
+  "main": "src/index.ts",
+  "name": "snowy-mud-aaba",
+  "upload_source_maps": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "1e9ebe78-e2ba-45b8-95a0-9c944f4d92d5",
+      "database_name": "noisy-firefly-7f96-d1"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
