@@ -6,7 +6,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - Public repositories discovered in the current account scan: **49**.
 - Destination: `theeb1230-dot/Shabawi-TV-`.
 - Ahmd3301 originals are never modified.
-- Destination permission previously rechecked: `admin`.
+- Destination permission rechecked: `admin`.
 - Physical representation: **49/49** under `upstream/Ahmd3301/<repo>/`; SOURCE.md-only remains PARTIAL.
 - Secret values/tokens/cookies/private credentials are not committed. Configuration variable names may be retained as contracts.
 
@@ -33,6 +33,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |TVNAI1.github.io|main|dac08043fd21df27c3e9db9d12ac0048fe986e2e|98c42622e2a3c6f2e3b594effde617aa7ee8034a|2|1|1|BLOCKED|
 |Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|2|0|2|PARTIAL|
 |plyr-pages|master|1417a44adbc444441a8b045dc22dcbc5904f2f79|963eaeeb1c5223b66f2651224200a58d6a40d130|18|0|18|PARTIAL|
+|url-shortener|master|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|700d857cbbf0e006de3c67b54ad7afc3d02acc12|9|0|9|PARTIAL|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
@@ -41,30 +42,31 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. The secret-bearing blob is not republished. `player.html` is mirrored byte-exact; the blocked path and reason are retained here without the secret value.
 
 ## Mirror evidence this run
-- Start main: `32cdc83619ca9a55c84ea0906934988636924634`.
+- Start main: `695c8e20ede40dfd8e4f0eaad43e480b85cbdc2e`.
+- Destination permission rechecked: `admin`.
 - Current Ahmd3301 discovery: **49 public repositories**; no repository-count drift detected.
-- Re-verified destination tree before mutation; all 49 upstream directories remain physically represented.
-- Verified `plyr-pages`: default `master`, commit `1417a44adbc444441a8b045dc22dcbc5904f2f79`, tree `963eaeeb1c5223b66f2651224200a58d6a40d130`, exactly 18 blobs. The tree duplicates a 9-blob player bundle at root and under `plyr-web/`; files include HLS.js, Plyr, Shaka Player and HTML player pages.
-- Attempted byte-exact `Omina` closure using upstream blob SHA. GitHub correctly rejected cross-repository SHA reuse (`422`): blob identities are repository-object-local unless the object already exists in the destination. `Omina` therefore remains PARTIAL 0/2 rather than receiving a false FULL claim. The safe next step is fetch/create destination blobs preserving exact bytes, then create the two paths.
+- Re-verified destination baseline: all 49 upstream directories remain physically represented.
+- Verified `url-shortener`: default `master`, commit `e9f48dff78674b4c3b31fcdb3b76b259c2b2319e`, tree `700d857cbbf0e006de3c67b54ad7afc3d02acc12`, exactly 9 blobs. It is a Next.js 15.3.6 URL shortener using Upstash Redis; environment-backed Redis configuration is part of the contract, while no external Redis dataset is claimed transferred.
+- Re-tested the `Omina` byte-preserving path. Creating a destination blob from modified/reformatted text correctly produced a different SHA, so no tree/commit was created from it and `Omina` remains PARTIAL 0/2. Exact bytes, not semantic equivalence, remain the acceptance criterion.
 - No external database content is claimed transferred.
 
 ## Coverage snapshot
-- Inventory Coverage: **20/49 = 40.8%** current commit/tree/blob verified in the current strict table.
+- Inventory Coverage: **21/49 = 42.9%** current commit/tree/blob verified in the current strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/117 blobs are byte-exact**, with **21 BLOCKED** and 71 other missing/PARTIAL. The 25/117 subset is evidence, not the project-wide ratio.
-- Overall Verified Project Completion: **9.2%**. Inventory/provenance evidence improved; integration/runtime/test/release evidence remains largely absent.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/126 blobs are byte-exact = 19.8%**, with **21 BLOCKED** and 80 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Overall Verified Project Completion: **9.3%**. Inventory/provenance evidence improved; integration/runtime/test/release evidence remains largely absent.
 
 ## Coverage policy
 Inventory Coverage is current-SHA/tree/blob verified repositories divided by the 49 repositories discovered in this run. Physical Representation counts destination upstream directories only. Raw Mirror Completeness counts only byte-identical upstream blobs; SOURCE.md is excluded unless it exists upstream. EMPTY repositories add zero to numerator and denominator. BLOCKED blobs remain in the expected denominator and are reported separately.
 
 ## P0 blockers
-1. **P0-1:** finish current commit/tree/blob recount for the remaining 29 repositories.
-2. **P0-3:** byte-exact raw mirror safe upstream blobs; cross-repository SHA cannot be attached directly unless the blob object exists in the destination, so create destination blobs from exact bytes first.
+1. **P0-1:** finish current commit/tree/blob recount for the remaining 28 repositories.
+2. **P0-3:** byte-exact raw mirror safe upstream blobs; create destination blobs from exact upstream bytes before tree insertion and verify resulting SHA equality.
 3. **P0-4:** resync current `faselhd-db` snapshot after confirmed upstream drift, then large `plyr-native`.
 4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values.
 5. **P0-7:** no Shabawi-owned integration until raw mirror/provenance reaches the allowed security boundary.
 
 ## Next-run targets
 1. Recount another large batch toward 49/49 current verification.
-2. Close `Omina` by creating byte-identical destination blob objects before tree insertion; then close other safe small repositories similarly.
+2. Close safe small repositories FULL only after destination blob SHA equality is demonstrated.
 3. Recount/resync `faselhd-db` current tree without treating its frequently changing generated data as static.
