@@ -7,7 +7,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - Destination: `theeb1230-dot/Shabawi-TV-`.
 - Ahmd3301 originals are never modified.
 - Destination permission rechecked: `admin`.
-- Physical representation: **49/49** under `upstream/Ahmd3301/<repo>/`; SOURCE.md-only remains PARTIAL.
+- Physical representation: **49/49** under `upstream/Ahmd3301/<repo>/`; SOURCE.md-only remains PARTIAL/BLOCKED as applicable.
 - Secret values/tokens/cookies/private credentials are not committed. Configuration variable names may be retained as contracts.
 
 ## Current-run verified records
@@ -39,38 +39,43 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |speed-test|main|39de226085a733c7e4453639c71a494042de7318|2668e6b028e2386c0e88b775c99a71eb2b81649d|16|0|16|PARTIAL|
 |vplyr-live-v2|main|26cec450d4bee06f1cee0d02899593fd4ed3bef7|da8fe559da4865e45c96cc1662a2d4c00b0ccdd0|14|0|14|PARTIAL|
 |vplyr-live-engine|main|cb5f67e78b118593457001f89d594de59a5a2c5b|c4762cb1420744a1a2a7a70434564f61c7a7dcec|14|0|14|PARTIAL|
+|qq|main|aad023f56719ac81275e6fca9124dc76ed707883|b549993689ab95496d47514af32709df1c7a0132|8|0|8|BLOCKED|
+|abcd|main|a29663f564694e7b43db77e6662d83e0318a11ea|be67c6fa860a2fb2e62ae4f3589d878ee710aac0|6|0|6|BLOCKED|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
 - `app`: operational source automates Cloudflare/Turnstile bypass and captures `cf_clearance`; 7 blobs remain BLOCKED.
-- `cfyt`: current tree has 10 blobs, but `src/api.ts` embeds a live-looking API credential. Raw publication is BLOCKED until a safe provenance representation can record the location/contract without republishing the value.
-- `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. The secret-bearing blob is not republished. `player.html` is mirrored byte-exact; the blocked path and reason are retained here without the secret value.
+- `cfyt`: current tree has 10 blobs, but `src/api.ts` embeds a live-looking API credential; raw publication is BLOCKED.
+- `TVNAI1.github.io/main.py`: contains an embedded Telegram bot token. `player.html` is mirrored byte-exact; the token-bearing blob is not republished.
+- `qq`: operational Cloudflare/Turnstile bypass and protected-session cookie reuse; 8 blobs remain BLOCKED at the public-mirror security boundary.
+- `abcd`: operational browser automation explicitly bypasses Cloudflare/Turnstile and persists session cookies for reuse; 6 blobs remain BLOCKED at the public-mirror security boundary.
 
 ## Mirror evidence this run
-- Start main: `d99a65f7020c9647d1c5efb237b6881d26bb9022`.
+- Start main: `3bcc49695e750526bd4dd9bc265e4e72d7a90bc0`.
 - Destination permission rechecked: `admin`.
 - Current Ahmd3301 discovery: **49 public repositories**; no repository-count drift detected.
-- Re-verified destination baseline from the current manifest: all 49 upstream directories remain physically represented.
-- Verified `vplyr-live-engine`: default `main`, commit `cb5f67e78b118593457001f89d594de59a5a2c5b`, tree `c4762cb1420744a1a2a7a70434564f61c7a7dcec`, exactly 14 blobs in a non-truncated recursive tree. It contains a live workflow, D1 migration, Node runner, Cloudflare Worker live/login/shared code, HLS tests and Wrangler configs. Destination currently has only SOURCE.md plus `migrations/0001_initial.sql`; the destination migration blob `bb5b5dab872352d42f6983e1b63c41f722c66c63` differs from upstream `56532c308da96c752f33be9a7c392cc77fa47f05`, so raw status is PARTIAL 0/14.
-- No external D1/database or Telegram state is claimed transferred; checked-in migration/configuration only proves contracts.
+- Re-verified destination baseline: all 49 upstream directories remain physically represented.
+- Rechecked already mirrored small repositories against current upstream: `TVnai` is 1/1 byte-exact at commit `f94799737839abbd580476237d1c2192f3b3b256`; `TV` is 1/1 byte-exact at commit `3f6d22e45d1cff251166e83fc7089a9e3fb5bdf6`; `Netflix.github.io` is 1/1 byte-exact at commit `c908d73092fc779d43afebe35a821a48a3eb7a1e`; `TVNAI2` remains 3/3 byte-exact at commit `5a74aaa0a7985b8a12e68460164f9bd86e8bbb92`.
+- Reconfirmed `plyrio` and `cfyb` return GitHub empty-repository state and therefore remain EMPTY with zero expected blobs.
+- Newly closed P0-1 slice: `abcd`, default `main`, commit `a29663f564694e7b43db77e6662d83e0318a11ea`, tree `be67c6fa860a2fb2e62ae4f3589d878ee710aac0`, exactly 6 blobs in a non-truncated recursive tree. Because its operational code performs Cloudflare/Turnstile bypass and persists session cookies, raw publication is BLOCKED; provenance records the location/reason without copying operational bypass code or cookie values.
 
 ## Coverage snapshot
-- Inventory Coverage: **26/49 = 53.1%** current commit/tree/blob verified in the current strict table.
+- Inventory Coverage: **28/49 = 57.1%** current commit/tree/blob verified in the strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/190 blobs are byte-exact = 13.2%**, with **21 BLOCKED** and 144 other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
-- Overall Verified Project Completion: **9.8%**. Inventory/provenance and environment-contract evidence improved; integration/runtime/test/release evidence remains largely absent.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/204 blobs are byte-exact = 12.3%**, with **29 BLOCKED** and **150** other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Overall Verified Project Completion: **10.0%** under the fixed weighted model. No runtime/E2E/release credit was added.
 
 ## Coverage policy
 Inventory Coverage is current-SHA/tree/blob verified repositories divided by the 49 repositories discovered in this run. Physical Representation counts destination upstream directories only. Raw Mirror Completeness counts only byte-identical upstream blobs; SOURCE.md is excluded unless it exists upstream. EMPTY repositories add zero to numerator and denominator. BLOCKED blobs remain in the expected denominator and are reported separately.
 
 ## P0 blockers
-1. **P0-1:** finish current commit/tree/blob recount for the remaining 23 repositories.
-2. **P0-3:** byte-exact raw mirror safe upstream blobs; `vplyr-live-engine` confirms destination files can drift and must be compared by blob SHA.
-3. **P0-4:** resync current `faselhd-db` snapshot after confirmed upstream drift, then large `plyr-native`.
-4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values; external state is never inferred from checked-in configuration.
+1. **P0-1:** finish current commit/tree/blob recount for the remaining **21 repositories**.
+2. **P0-3:** byte-exact raw mirror independently safe upstream blobs; do not treat SOURCE.md as upstream content.
+3. **P0-4:** resync current `faselhd-db` after upstream drift, then large `plyr-native`.
+4. **P0-5/P0-6:** preserve environment/database contracts and license/provenance without secret values or external state claims.
 5. **P0-7:** no Shabawi-owned integration until raw mirror/provenance reaches the allowed security boundary.
 
 ## Next-run targets
-1. Recount another large batch toward 49/49 current verification.
+1. Recount another batch toward 49/49 current verification, prioritizing small repositories that can be closed FULL or EMPTY quickly.
 2. Close safe small repositories FULL only after destination blob SHA equality is demonstrated.
 3. Recount/resync `faselhd-db` current tree without treating its frequently changing generated data as static.
