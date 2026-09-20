@@ -1,0 +1,10 @@
+{
+  "appId": "com.pro.videoplayer",
+  "appName": "URL Player Pro",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://ahmd3301.github.io/video-player/",
+    "allowNavigation": ["*"]
+  }
+}
