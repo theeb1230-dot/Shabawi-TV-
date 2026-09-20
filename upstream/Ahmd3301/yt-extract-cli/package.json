@@ -1,0 +1,17 @@
+{
+  "name": "yt-extract-cli",
+  "version": "1.0.0",
+  "description": "YouTube link extractor CLI - extract video info without downloading",
+  "type": "module",
+  "bin": {
+    "yt-extract": "./bin/yt-extract.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node bin/yt-extract.js"
+  },
+  "dependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
