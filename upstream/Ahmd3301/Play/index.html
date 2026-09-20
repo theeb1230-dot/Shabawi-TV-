@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة تشغيل قوائم الفيديو</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 700px; text-align: center; box-sizing: border-box; }
+        h1, h2 { color: #1a73e8; margin-top: 0; }
+        .video-item { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: right; position: relative; }
+        .video-item .remove-btn { position: absolute; top: 10px; left: 10px; background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .video-item .remove-btn:hover { background: #bd2130; }
+        .input-group { margin-bottom: 10px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { background: #1a73e8; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
+        button:hover { background: #1557b0; }
+        .add-btn { background: #28a745; margin-bottom: 20px; }
+        .add-btn:hover { background: #218838; }
+        .result-box { background: #f8f9fa; border: 1px dashed #1a73e8; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: right; }
+        .result-link { word-break: break-all; font-family: monospace; background: #eee; padding: 8px; display: block; margin-top: 8px; border-radius: 4px; font-size: 12px; user-select: all; direction: ltr; }
+        .loading { font-size: 20px; color: #666; margin: 20px 0; }
+        .fallback-btn { background: #ffc107; color: #333; margin-top: 20px; }
+        .fallback-btn:hover { background: #e0a800; }
+        #playlistContainer { max-height: 400px; overflow-y: auto; padding-left: 5px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div class="loading">جاري تهيئة الأداة...</div>
+</div>
+
+<script>
+    // 1. تعريف المتغيرات والدوال أولاً لتفادي أخطاء الـ ReferenceError
+    let videoCount = 0;
+
+    // دالة آمنة لتحويل النصوص (بما فيها العربية) إلى Base64
+    function textToBase64(text) {
+        const bytes = new TextEncoder().encode(text);
+        const binString = String.fromCodePoint(...bytes);
+        return btoa(binString);
+    }
+
+    // دالة إضافة حقل فيديو جديد للقائمة
+    function addVideoField() {
+        videoCount++;
+        const container = document.getElementById('playlistContainer');
+        if (!container) return;
+        
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.id = `videoItem_${videoCount}`;
+        item.innerHTML = `
+            <button class="remove-btn" onclick="removeVideoField(${videoCount})">حذف ❌</button>
+            <h4 style="margin: 0 0 10px 0; color: #555;">فيديو #${videoCount}</h4>
+            <div class="input-group">
+                <label>عنوان الفيديو:</label>
+                <input type="text" class="video-title" placeholder="مثال: فيديو الجزء الأول" value="فيديو ${videoCount}">
+            </div>
+            <div class="input-group">
+                <label>رابط الفيديو المباشر (Direct/HLS Link):</label>
+                <input type="text" class="video-src" placeholder="ضع الرابط هنا...">
+            </div>
+        `;
+        container.appendChild(item);
+        container.scrollTop = container.scrollHeight; // التمرير التلقائي لأسفل
+    }
+
+    // دالة حذف حقل الفيديو
+    function removeVideoField(id) {
+        const item = document.getElementById(`videoItem_${id}`);
+        if (item) item.remove();
+    }
+
+    // دالة توليد رابط المشاركة المشفر بـ Base64
+    function generateShareLink() {
+        const titles = document.getElementsByClassName('video-title');
+        const srcs = document.getElementsByClassName('video-src');
+        const playlist = [];
+
+        for (let i = 0; i < srcs.length; i++) {
+            const srcVal = srcs[i].value.trim();
+            const titleVal = titles[i].value.trim();
+
+            if (srcVal) {
+                playlist.push({
+                    title: titleVal || `فيديو ${i + 1}`,
+                    src: srcVal
+                });
+            }
+        }
+
+        if (playlist.length === 0) {
+            alert("يرجى إضافة رابط فيديو واحد على الأقل!");
+            return;
+        }
+
+        // تشفير قائمة التشغيل بالكامل لـ Base64
+        const jsonStr = JSON.stringify(playlist);
+        const base64Data = textToBase64(jsonStr);
+
+        // بناء الرابط النهائي للمشاركة
+        const currentUrl = window.location.href.split('?')[0];
+        const shareLink = `${currentUrl}?data=${encodeURIComponent(base64Data)}`;
+
+        document.getElementById('shareLinkOutput').innerText = shareLink;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    // دالة نسخ الرابط
+    function copyToClipboard() {
+        const linkText = document.getElementById('shareLinkOutput').innerText;
+        navigator.clipboard.writeText(linkText).then(() => {
+            alert("تم نسخ رابط قائمة التشغيل بنجاح!");
+        }).catch(err => {
+            alert("فشل النسخ التلقائي، يمكنك نسخ النص يدوياً.");
+        });
+    }
+
+    // 2. كود التحقق من الرابط والتشغيل (يُنفّذ عند تحميل الصفحة)
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramData = urlParams.get('data'); 
+    const appContainer = document.getElementById('app');
+
+    // الحالة الأولى: إذا كان الرابط يحتوي على قائمة تشغيل مشفرة جاهزة للتوجيه
+    if (paramData) {
+        appContainer.innerHTML = `
+            <h2>جاري فتح قائمة التشغيل...</h2>
+            <p>يرجى الانتظار لحظات، سيتم توجيهك إلى التطبيق مباشرة.</p>
+            <div class="loading">🔄</div>
+            <button class="fallback-btn" id="openBtn">اضغط هنا إذا لم يفتح تلقائياً</button>
+        `;
+
+        const appDeepLink = `videoplyrio://open?data=${encodeURIComponent(paramData)}`;
+
+        // محاولة التوجيه التلقائي
+        window.location.href = appDeepLink;
+
+        // خيار احتياطي يدوي
+        document.getElementById('openBtn').onclick = function() {
+            window.location.href = appDeepLink;
+        };
+
+    } else {
+        // الحالة الثانية: واجهة إنشاء قائمة التشغيل الخاصة بك
+        appContainer.innerHTML = `
+            <h1>مُولد قوائم التشغيل للتطبيق</h1>
+            <p>أضف أي عدد من الفيديوهات لإنشاء رابط تشغيل موحد (Playlist) وإرساله لأي شخص.</p>
+            
+            <div id="playlistContainer">
+                <!-- يتم إضافة حقول الفيديو هنا ديناميكياً -->
+            </div>
+
+            <button class="add-btn" onclick="addVideoField()">➕ إضافة فيديو جديد للقائمة</button>
+            <button onclick="generateShareLink()">توليد رابط قائمة التشغيل</button>
+
+            <div class="result-box" id="resultBox">
+                <label>الرابط الجاهز للمشاركة:</label>
+                <span class="result-link" id="shareLinkOutput"></span>
+                <button onclick="copyToClipboard()" style="background:#555; margin-top:10px;">نسخ الرابط</button>
+            </div>
+        `;
+
+        // إضافة أول فيديو تلقائياً عند تحميل الصفحة لأول مرة
+        addVideoField();
+    }
+</script>
+</body>
+</html>
