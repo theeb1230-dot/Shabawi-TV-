@@ -5,9 +5,9 @@ Default branch: `master`
 Exact commit SHA: `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`
 Exact tree SHA: `6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5`
 Recursive tree truncated: `false`
-Expected upstream blobs: `9`
+Expected upstream blobs: `10`
 Transferred exact blobs: `1`
-Missing blobs: `8`
+Missing blobs: `9`
 Blocked blobs: `0`
 State: `PARTIAL`
 
