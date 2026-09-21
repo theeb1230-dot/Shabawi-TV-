@@ -41,6 +41,9 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |vplyr-live-engine|main|cb5f67e78b118593457001f89d594de59a5a2c5b|c4762cb1420744a1a2a7a70434564f61c7a7dcec|14|0|14|PARTIAL|
 |qq|main|aad023f56719ac81275e6fca9124dc76ed707883|b549993689ab95496d47514af32709df1c7a0132|8|0|8|BLOCKED|
 |abcd|main|a29663f564694e7b43db77e6662d83e0318a11ea|be67c6fa860a2fb2e62ae4f3589d878ee710aac0|6|0|6|BLOCKED|
+|KickStream-Actions-Orchestrator|main|722c17a9821c9c43493494898ed640c4c6523f8a|UNRESOLVED|1|1|0|FULL|
+|video-player|main|e84b829ce98d846415dc49c3cb4cf6ad2ca1f3b9|UNRESOLVED|1|1|0|FULL|
+|Plyr.io|main|5fcb6ac8bb8724b8e260ff6563fc238755c1d21f|UNRESOLVED|1|1|0|FULL|
 
 ## Security exceptions
 - `NETFLIX`: inspected snapshot contains credential collection/exfiltration behavior plus embedded live-looking secret material; 3 blobs remain BLOCKED.
@@ -51,6 +54,8 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `abcd`: operational browser automation explicitly bypasses Cloudflare/Turnstile and persists session cookies for reuse; 6 blobs remain BLOCKED at the public-mirror security boundary.
 
 ## Mirror evidence this run
+- New continuation start main: `0b33e0cd9f5c872de7de4b699f52cc05582cba82`; current discovery remains 49 and destination admin/push permission is confirmed.
+- Mirrored and re-read three small repositories byte-exact: `KickStream-Actions-Orchestrator/README.md` blob `9be45913c606725d1bb8844b96a719f85cfe8d99`, `video-player/package.json` blob `b2ef058bcf31323e57c545583ca4a56a0b48759c`, and `Plyr.io/settings.gradle.kts` blob `702f03436dc820e3ff9ab5e3be0041d349abccc5`. Each current inspected commit contains exactly one blob. Tree SHA remains UNRESOLVED with the current connector, so strict Inventory Coverage is intentionally not inflated.
 - Continuation run start main: `dd8961c9a79939ccf1806c912345d6ec6fdf9e3b`; destination permission rechecked with admin/push and Ahmd3301 discovery remains **49 public repositories**.
 - `Omina/index.html` is now destination blob `ad0eade5563549a7b7655ab840881c7a7c85caf7`, exactly equal to upstream at `a75a1c9f9f62c5ba57a21974573a132146a2bfcc`; Omina is 1/2 and remains PARTIAL.
 - Closed `yt-extract-cli` FULL at upstream `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`: all 9/9 expected blobs are now byte-exact. This continuation added README.md, package-lock.json, tsconfig.json, src/logger.ts, src/formatter.ts and src/index.ts; their destination blob SHAs were re-read and matched upstream exactly.
@@ -65,7 +70,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 ## Coverage snapshot
 - Inventory Coverage: **28/49 = 57.1%** current commit/tree/blob verified in the strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **32/204 blobs are byte-exact = 15.7%**, with **29 BLOCKED** and **143** other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **35/207 blobs are byte-exact = 16.9%**, with **29 BLOCKED** and **143** other missing/PARTIAL. Three newly mirrored one-blob repositories are content-complete but are not yet credited to strict Inventory Coverage because their exact tree SHA still needs independent capture. This subset ratio is evidence, not the project-wide ratio.
 - Overall Verified Project Completion: **10.0%** under the fixed weighted model. No runtime/E2E/release credit was added.
 
 ## Coverage policy
