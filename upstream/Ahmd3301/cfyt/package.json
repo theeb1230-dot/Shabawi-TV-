@@ -1,0 +1,16 @@
+{
+  "name": "cfyb",
+  "version": "1.0.0",
+  "description": "YouTube info extractor — Cloudflare Worker",
+  "private": true,
+  "scripts": {
+    "dev":   "wrangler dev",
+    "deploy":"wrangler deploy",
+    "build": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250525.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.0.0"
+  }
+}
