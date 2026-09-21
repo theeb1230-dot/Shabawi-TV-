@@ -1,0 +1,25 @@
+{
+  "name": "yt-extract-standalone",
+  "version": "1.0.0",
+  "description": "Self-contained YouTube extractor CLI (no yt-dlp required)",
+  "type": "module",
+  "bin": {
+    "yt-extract": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "extract": "npm run build && node dist/index.js"
+  },
+  "keywords": [
+    "youtube",
+    "extract",
+    "downloader",
+    "cli"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
+}
