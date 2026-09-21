@@ -6,10 +6,14 @@
 - Exact tree: `700d857cbbf0e006de3c67b54ad7afc3d02acc12`
 - Recursive tree truncated: `false`
 - Expected upstream blobs: `9`
-- Byte-exact transferred blobs: `8`
-- Missing/non-exact: `1` (`app/page.tsx`)
+- Byte-exact transferred blobs: `9`
+- Missing/non-exact: `0`
 - Blocked: `0`
-- State: `PARTIAL`
+- State: `FULL`
+
+## Verification
+
+All nine upstream blobs are present byte-exact in the destination. `app/page.tsx` was re-created with the upstream terminal newline and now has Git blob SHA `3192e4a56b0614e83bde3663f147bbe21b205235`, equal to upstream. This `SOURCE.md` is provenance metadata and is not counted as an upstream blob.
 
 ## Environment contract
 
@@ -17,4 +21,4 @@ The source uses Upstash Redis through environment variables `UPSTASH_REDIS_REST_
 
 ## License/provenance
 
-No `LICENSE` or `NOTICE` blob exists in the current upstream tree. This file records provenance only and is not counted as an upstream blob.
+No `LICENSE` or `NOTICE` blob exists in the current upstream tree.
