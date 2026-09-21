@@ -6,14 +6,16 @@ Exact commit SHA: `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`
 Exact tree SHA: `6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5`
 Recursive tree truncated: `false`
 Expected upstream blobs: `10`
-Transferred exact blobs: `1`
-Missing blobs: `9`
+Transferred exact blobs: `3`
+Missing blobs: `7`
 Blocked blobs: `0`
 State: `PARTIAL`
 
 ## Blob accounting
+- `.gitignore` — transferred byte-exact; upstream blob SHA `ce59d521feadd8ec786b6a9f14e44a3059ac9fbf`.
+- `bin/yt-extract.js` — transferred byte-exact; upstream blob SHA `907c618f0e6c632382a4855c41bc2dbc793509bd`.
 - `package.json` — transferred byte-exact; upstream blob SHA `0c5bcb82cb7deaec2919b1c9f540605c1d279b81`.
-- Remaining upstream blobs: `.gitignore`, `README.md`, `bin/yt-extract.js`, `package-lock.json`, `src/extractor.ts`, `src/formatter.ts`, `src/index.ts`, `src/logger.ts`, `tsconfig.json`.
+- Remaining upstream blobs: `README.md`, `package-lock.json`, `src/extractor.ts`, `src/formatter.ts`, `src/index.ts`, `src/logger.ts`, `tsconfig.json`.
 
 ## Analysis
 TypeScript/Node.js CLI wrapper around yt-dlp. It extracts video metadata and direct format URLs and is useful as Shabawi diagnostics/tooling rather than a mandatory mobile runtime dependency. No database schema, migration, workflow, or committed secret was observed in the current tree. README states MIT, but the current upstream tree does not contain a standalone LICENSE file, so no absent license file is fabricated here.
