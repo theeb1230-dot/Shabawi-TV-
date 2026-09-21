@@ -1,0 +1,233 @@
+name: Fasel DB Scraper
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+
+  scrape-movies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl movies
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-movies
+          path: data/movies.json
+          if-no-files-found: ignore
+
+  scrape-series:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl series
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-series
+          path: data/series.json
+          if-no-files-found: ignore
+
+  scrape-hindi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl hindi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-hindi
+          path: data/hindi.json
+          if-no-files-found: ignore
+
+  scrape-asian-movies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl asian_movies
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-asian_movies
+          path: data/asian_movies.json
+          if-no-files-found: ignore
+
+  scrape-anime-movies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl anime_movies
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-anime_movies
+          path: data/anime_movies.json
+          if-no-files-found: ignore
+
+  scrape-asian-series:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl asian_series
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-asian_series
+          path: data/asian_series.json
+          if-no-files-found: ignore
+
+  scrape-tvshows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl tvshows
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-tvshows
+          path: data/tvshows.json
+          if-no-files-found: ignore
+
+  scrape-anime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run spider
+        run: cd fasel && scrapy crawl anime
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-anime
+          path: data/anime.json
+          if-no-files-found: ignore
+
+  commit-all:
+    runs-on: ubuntu-latest
+    needs: [scrape-movies, scrape-series, scrape-hindi, scrape-asian-movies, scrape-anime-movies, scrape-asian-series, scrape-tvshows, scrape-anime]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Move JSON files to data/
+        run: |
+          mkdir -p data
+          # كل artifact ينزل في مجلد باسمه: artifacts/data-movies/movies.json
+          find artifacts/ -name "*.json" | while read f; do
+            filename=$(basename "$f")
+            mv "$f" "data/$filename"
+            echo "moved: $filename"
+          done
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "✅ لا يوجد تغييرات جديدة"
+          else
+            COUNT=$(git diff --cached --numstat | wc -l)
+            git commit -m "db: update $COUNT categories [skip ci]"
+            git push
+            echo "✅ تم الحفظ بنجاح"
+          fi
