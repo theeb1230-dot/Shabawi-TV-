@@ -1,0 +1,263 @@
+name: Build VideoPlyr APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Generate Gradle Wrapper
+        run: |
+          gradle wrapper --gradle-version 8.4 --distribution-type bin
+          chmod +x gradlew
+
+      # ✅ إنشاء ملف الإعدادات المفقود لحل مشكلة AndroidX
+      - name: Create gradle.properties
+        run: |
+          cat > gradle.properties << 'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          EOF
+
+      # ✅ إنشاء ملف إعدادات التطبيق
+      - name: Create app/build.gradle.kts
+        run: |
+          mkdir -p app
+          cat > app/build.gradle.kts << 'EOF'
+          plugins {
+              id("com.android.application")
+              kotlin("android")
+          }
+          android {
+              namespace = "io.videoplyr.app"
+              compileSdk = 34
+              defaultConfig {
+                  applicationId = "io.videoplyr.app"
+                  minSdk = 26
+                  targetSdk = 34
+                  versionCode = 1
+                  versionName = "1.0"
+              }
+              buildTypes {
+                  debug {
+                      isDebuggable = true
+                  }
+              }
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+              buildFeatures {
+                  viewBinding = true
+              }
+          }
+          dependencies {
+              implementation("androidx.media3:media3-exoplayer:1.3.1")
+              implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
+              implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+              implementation("androidx.media3:media3-ui:1.3.1")
+              implementation("androidx.media3:media3-datasource-okhttp:1.3.1")
+              implementation("androidx.appcompat:appcompat:1.6.1")
+              implementation("androidx.core:core-ktx:1.12.0")
+              implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+              implementation("androidx.recyclerview:recyclerview:1.3.2")
+              implementation("com.github.Dimezis:BlurView:version-2.0.3")
+          }
+          EOF
+
+      # ✅ إنشاء ملف الألوان والأنماط والتدرجات
+      - name: Create colors, themes and gradients
+        run: |
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable
+          
+          cat > app/src/main/res/values/s.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="white_12">#1FFFFFFF</color>
+              <color name="white_25">#40FFFFFF</color>
+              <color name="white_40">#66FFFFFF</color>
+              <color name="white_100">#FFFFFFFF</color>
+              <color name="black_80">#CC000000</color>
+              <color name="transparent">#00000000</color>
+
+              <style name="FullscreenTheme" parent="Theme.Material3.DayNight.NoActionBar">
+                  <item name="android:windowFullscreen">true</item>
+                  <item name="android:windowContentOverlay">@null</item>
+                  <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+                  <item name="android:statusBarColor">@android:color/transparent</item>
+                  <item name="android:navigationBarColor">@android:color/transparent</item>
+                  <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+              </style>
+          </resources>
+          EOF
+
+          cat > app/src/main/res/drawable/controls_gradient.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"
+              android:shape="rectangle">
+              <gradient
+                  android:startColor="@color/transparent"
+                  android:endColor="@color/black_80"
+                  android:angle="90"/>
+          </shape>
+          EOF
+
+      # ✅ استخراج الأيقونات + إضافة الأيقونات المفقودة يدوياً
+      - name: Extract Plyr SVG icons as VectorDrawables
+        run: |
+          curl -sL "https://cdn.plyr.io/3.8.4/plyr.svg" -o /tmp/plyr.svg
+          python3 - <<'EOF'
+          import re, pathlib,, xml.etree.ElementTree as ET
+
+          svg = pathlib.Path("/tmp/plyr.svg").read_text()
+          out = pathlib.Path("app/src/main/res/drawable")
+          out.mkdir(parents=True, exist_ok=True)
+
+          icons = {
+              "plyr-play": "ic_play",
+              "plyr-pause": "ic_pause",
+              "plyr-rewind": "ic_rewind",
+              "plyr-fast-forward": "ic_forward",
+              "plyr-muted": "ic_mute",
+              "plyr-volume": "ic_volume",
+              "plyr-captions-on": "ic_captions_on",
+              "plyr-captions-off": "ic_captions_off",
+              "plyr-settings": "ic_settings",
+              "plyr-pip": "ic_pip",
+              "plyr-fullscreen-enter": "ic_fullscreen_enter",
+              "plyr-fullscreen-exit": "ic_fullscreen_exit",
+          }
+
+          ns = {"svg": "http://www.w3.org/2000/svg"}
+          ET.register_namespace("", "http://www.w3.org/2000/svg")
+          tree = ET.fromstring(svg)
+
+          for symbol_id, file_name in icons.items():
+              symbol = tree.find(f'.//svg:symbol[@id="{symbol_id}"]', ns)
+              if symbol is None:
+                  print(f"⚠️  {symbol_id} not found, will create manually later")
+                  continue
+              vb = symbol.get("viewBox", "0 0 18 18").split()
+              w, h = vb[2], vb[3]
+              paths = []
+              for elem in symbol.iter():
+                  tag = elem.tag.split("}")[-1]
+                  if tag == "path":
+                      d = elem.get("d", "")
+                      if d:
+                          paths.append(f'    <path android:fillColor="#FFFFFF" android:pathData="{d}"/>')
+                  elif tag == "use":
+                      href = elem.get("{http://www.w3.org/1999/xlink}href", "")
+                      if href:
+                          ref_id = href.lstrip("#")
+                          ref = tree.find(f'.//*[@id="{ref_id}"]')
+                          if ref is not None:
+                              d = ref.get("d", "")
+                              if d:
+                                  paths.append(f'    <path android:fillColor="#FFFFFF" android:pathData="{d}"/>')
+              if not paths:
+                  print(f"⚠️  No paths found in {symbol_id}")
+                  continue
+              xml_content = f'''<?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="18dp"
+              android:height="18dp"
+              android:viewportWidth="{w}"
+              android:viewportHeight="{h}">
+          {chr(10).join(paths)}
+          </vector>'''
+              (out / f"{file_name}.xml").write_text(xml_content)
+              print(f"✅ {file_name}.xml created")
+
+          # إنشاء أيقونات مفقودة يدوياً
+          # أيقونة ملء الشاشة دخول
+          fs_enter = '''<?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="18dp"
+              android:height="18dp"
+              android:viewportWidth="24"
+              android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M7,14L5,14 5,19 10,19 10,17 7,17 7,14zM19,10L19,7 14,7 14,5 19,5 19,10zM17,17L14,17 14,19 19,19 19,14 17,14 17,17zM10,5L5,5 5,10 7,10 7,7 10,7 10,5z"/>
+          </vector>'''
+          (out / "ic_fullscreen_enter.xml").write_text(fs_enter)
+
+          # أيقونة ملء الشاشة خروج
+          fs_exit = '''<?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="18dp"
+              android:height="18dp"
+              android:viewportWidth="24"
+              android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M5,16h3v3h2v-5H5v2zM3,5h2v3h3v2H3V5zM17,19h-3v-3h-2v5h5v-2zM19,9h-2V6h-3V4h5v5z"/>
+          </vector>'''
+          (out / "ic_fullscreen_exit.xml").write_text(fs_exit)
+
+          # أيقونة تغيير الحجم
+          resize_xml = '''<?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="18dp"
+              android:height="18dp"
+              android:viewportWidth="18"
+              android:viewportHeight="18">
+              <path android:fillColor="#FFFFFF"
+                  android:pathData="M1,1 L1,6 L2.5,6 L2.5,2.5 L6,2.5 L6,1 Z
+                                    M12,1 L12,2.5 L15.5,2.5 L15.5,6 L17,6 L17,1 Z
+                                    M1,12 L1,17 L6,17 L6,15.5 L2.5,15.5 L2.5,12 Z
+                                    M15.5,12 L15.5,15.5 L12,15.5 L12,17 L17,17 L17,12 Z"/>
+          </vector>'''
+          (out / "ic_resize.xml").write_text(resize_xml)
+          EOF
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VideoPlyr-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "VideoPlyr Debug Build #${{ github.run_number }}"
+          body: |
+            ## 📥 Download APK
+            Tap `app-debug.apk` below to download and install.
+            Built from commit ${{ github.sha }}
+          files: app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print APK download URL
+        run: |
+          echo "✅ APK ready at:"
+          echo "https://github.com/${{ github.repository }}/releases/tag/build-${{ github.run_number }}"
