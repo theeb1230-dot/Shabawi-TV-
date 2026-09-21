@@ -22,7 +22,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |plyrio|main|EMPTY|EMPTY|0|0|0|EMPTY|
 |cfyb|main|EMPTY|EMPTY|0|0|0|EMPTY|
 |cfyt|main|3924dd6ea15daac83b35b48e4e7c414041d7614b|9215695d1b40204a0d144f45af9a61836eaffa44|10|0|10|BLOCKED|
-|yt-extract-cli|master|b0244b3f6c4c2d4da505fa54aed42b1f197615ac|6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5|9|0|9|PARTIAL|
+|yt-extract-cli|master|b0244b3f6c4c2d4da505fa54aed42b1f197615ac|6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5|9|9|0|FULL|
 |yt-info|main|825fa28ad1a0e877e5a5123e2ba30a967586d26e|286e54f3f4020c810437908a56e608ab024a2854|11|0|11|PARTIAL|
 |mediaplyr|main|59da5a8cdcc945858092874266b112d18188f165|9bafc80b13c7bd31d4e3b1f8da49cc56eb938155|4|0|4|PARTIAL|
 |TVNAI3|main|f92e8cccef53df3c712ae2848b0deec9c2734265|5742b81180f172e6869096a534c2c2fab98e63f9|1|1|0|FULL|
@@ -31,7 +31,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |TVnai|main|f94799737839abbd580476237d1c2192f3b3b256|a0037b164c001859cd5c1436779d8369899a71db|1|1|0|FULL|
 |my-project|main|d604fb35a7d36f3dc4184d3bab29f73b6f8b000a|ce4a4c599328b4ae73498649c0706f108584085b|2|2|0|FULL|
 |TVNAI1.github.io|main|dac08043fd21df27c3e9db9d12ac0048fe986e2e|98c42622e2a3c6f2e3b594effde617aa7ee8034a|2|1|1|BLOCKED|
-|Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|2|0|2|PARTIAL|
+|Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|2|1|1|PARTIAL|
 |plyr-pages|master|1417a44adbc444441a8b045dc22dcbc5904f2f79|963eaeeb1c5223b66f2651224200a58d6a40d130|18|0|18|PARTIAL|
 |url-shortener|master|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|700d857cbbf0e006de3c67b54ad7afc3d02acc12|9|0|9|PARTIAL|
 |snowy-mud-aaba|main|6000552a8c15b98378383047634ec8488e8d2a44|33e9c63d18ae24671aa3177b371a679aed78e737|9|0|9|PARTIAL|
@@ -51,6 +51,9 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `abcd`: operational browser automation explicitly bypasses Cloudflare/Turnstile and persists session cookies for reuse; 6 blobs remain BLOCKED at the public-mirror security boundary.
 
 ## Mirror evidence this run
+- Continuation run start main: `dd8961c9a79939ccf1806c912345d6ec6fdf9e3b`; destination permission rechecked with admin/push and Ahmd3301 discovery remains **49 public repositories**.
+- `Omina/index.html` is now destination blob `ad0eade5563549a7b7655ab840881c7a7c85caf7`, exactly equal to upstream at `a75a1c9f9f62c5ba57a21974573a132146a2bfcc`; Omina is 1/2 and remains PARTIAL.
+- Closed `yt-extract-cli` FULL at upstream `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`: all 9/9 expected blobs are now byte-exact. This continuation added README.md, package-lock.json, tsconfig.json, src/logger.ts, src/formatter.ts and src/index.ts; their destination blob SHAs were re-read and matched upstream exactly.
 - Start main: `3bcc49695e750526bd4dd9bc265e4e72d7a90bc0`.
 - Destination permission rechecked: `admin`.
 - Current Ahmd3301 discovery: **49 public repositories**; no repository-count drift detected.
@@ -62,7 +65,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 ## Coverage snapshot
 - Inventory Coverage: **28/49 = 57.1%** current commit/tree/blob verified in the strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **25/204 blobs are byte-exact = 12.3%**, with **29 BLOCKED** and **150** other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **32/204 blobs are byte-exact = 15.7%**, with **29 BLOCKED** and **143** other missing/PARTIAL. This subset ratio is evidence, not the project-wide ratio.
 - Overall Verified Project Completion: **10.0%** under the fixed weighted model. No runtime/E2E/release credit was added.
 
 ## Coverage policy
