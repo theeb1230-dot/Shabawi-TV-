@@ -31,7 +31,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |TVnai|main|f94799737839abbd580476237d1c2192f3b3b256|a0037b164c001859cd5c1436779d8369899a71db|1|1|0|FULL|
 |my-project|main|d604fb35a7d36f3dc4184d3bab29f73b6f8b000a|ce4a4c599328b4ae73498649c0706f108584085b|2|2|0|FULL|
 |TVNAI1.github.io|main|dac08043fd21df27c3e9db9d12ac0048fe986e2e|98c42622e2a3c6f2e3b594effde617aa7ee8034a|2|1|1|BLOCKED|
-|Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|2|1|1|PARTIAL|
+|Omina|main|a75a1c9f9f62c5ba57a21974573a132146a2bfcc|ef93ebe632639bfa504b0fe73510335c2c4753a6|1|1|0|FULL|
 |plyr-pages|master|1417a44adbc444441a8b045dc22dcbc5904f2f79|963eaeeb1c5223b66f2651224200a58d6a40d130|18|0|18|PARTIAL|
 |url-shortener|master|e9f48dff78674b4c3b31fcdb3b76b259c2b2319e|700d857cbbf0e006de3c67b54ad7afc3d02acc12|9|0|9|PARTIAL|
 |snowy-mud-aaba|main|6000552a8c15b98378383047634ec8488e8d2a44|33e9c63d18ae24671aa3177b371a679aed78e737|9|0|9|PARTIAL|
@@ -54,6 +54,8 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `abcd`: operational browser automation explicitly bypasses Cloudflare/Turnstile and persists session cookies for reuse; 6 blobs remain BLOCKED at the public-mirror security boundary.
 
 ## Mirror evidence this run
+- New continuation start main: `0d24cb58c6acfebcf31f157506e0d8494d695e86`; discovery re-run found 49 public repositories and destination admin/push permission remains available.
+- Corrected `Omina` expected blob count from 2 to 1 after direct inspection of exact upstream commit `a75a1c9f9f62c5ba57a21974573a132146a2bfcc`: the commit contains only `index.html`. Destination blob `ad0eade5563549a7b7655ab840881c7a7c85caf7` was already verified byte-exact, therefore `Omina` is now FULL 1/1. This correction reduces the strict denominator rather than inventing a missing blob.
 - New continuation start main: `0b33e0cd9f5c872de7de4b699f52cc05582cba82`; current discovery remains 49 and destination admin/push permission is confirmed.
 - Mirrored and re-read three small repositories byte-exact: `KickStream-Actions-Orchestrator/README.md` blob `9be45913c606725d1bb8844b96a719f85cfe8d99`, `video-player/package.json` blob `b2ef058bcf31323e57c545583ca4a56a0b48759c`, and `Plyr.io/settings.gradle.kts` blob `702f03436dc820e3ff9ab5e3be0041d349abccc5`. Each current inspected commit contains exactly one blob. Tree SHA remains UNRESOLVED with the current connector, so strict Inventory Coverage is intentionally not inflated.
 - Continuation run start main: `dd8961c9a79939ccf1806c912345d6ec6fdf9e3b`; destination permission rechecked with admin/push and Ahmd3301 discovery remains **49 public repositories**.
@@ -70,7 +72,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 ## Coverage snapshot
 - Inventory Coverage: **28/49 = 57.1%** current commit/tree/blob verified in the strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **35/207 blobs are byte-exact = 16.9%**, with **29 BLOCKED** and **143** other missing/PARTIAL. Three newly mirrored one-blob repositories are content-complete but are not yet credited to strict Inventory Coverage because their exact tree SHA still needs independent capture. This subset ratio is evidence, not the project-wide ratio.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **35/206 blobs are byte-exact = 17.0%**, with **29 BLOCKED** and **142** other missing/PARTIAL. Three newly mirrored one-blob repositories are content-complete but are not yet credited to strict Inventory Coverage because their exact tree SHA still needs independent capture. This subset ratio is evidence, not the project-wide ratio.
 - Overall Verified Project Completion: **10.0%** under the fixed weighted model. No runtime/E2E/release credit was added.
 
 ## Coverage policy
