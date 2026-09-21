@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدونة P2P - لامركزية</title>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .user-id {
+            background: #e8f4f8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #2980b9;
+            word-break: break-all;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-right: 4px solid #3498db;
+            padding-right: 10px;
+        }
+
+        textarea, input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .post {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-right: 4px solid #2ecc71;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .online { background: #d4edda; color: #155724;}
+        .offline { background: #f8d7da; color: #721c24;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌐 مدونة الند للند P2P</h1>
+        <p>مدونة لامركزية تعمل بدون سيرفر تخزين</p>
+        <div class="user-id">معرفك: <span id="myId">جاري التحميل...</span></div>
+    </header>
+
+    <div class="status" id="status">جاري الاتصال بالشبكة...</div>
+
+    <div class="container">
+
+        <!-- منطقة الكتابة والنشر -->
+        <div class="box">
+            <h2>✍️ اكتب مقالك الجديد</h2>
+            <input type="text" id="titleInput" placeholder="عنوان المقال">
+            <textarea id="contentInput" rows="5" placeholder="محتوى المقال هنا..."></textarea>
+            <button onclick="publishPost()">🚀 نشر المقال</button>
+        </div>
+
+        <!-- منطقة البحث عن مدونين -->
+        <div class="box">
+            <h2>🔍 ابحث عن مدون</h2>
+            <input type="text" id="searchInput" placeholder="أدخل المعرف هنا...">
+            <button onclick="searchUser()">📂 عرض المدونة</button>
+        </div>
+
+        <!-- منطقة عرض المقالات -->
+        <div class="box">
+            <h2>📖 المقالات المعروضة</h2>
+            <div id="postsContainer">
+                <p style="color:#777; text-align:center;">لا يوجد مقالات لعرضها بعد</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ======== 1. إعداد الهوية والشبكة ==========
+        let myPeer;
+        let myID;
+        let connectedPeers = {};
+        
+        // توليد معرف فريد للمستخدم (مثل DHT)
+        function generateID() {
+            return 'user_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // استرجاع أو حفظ الهوية في جهاز المستخدم
+        myID = localStorage.getItem('p2p_user_id') || generateID();
+        if(!localStorage.getItem('p2p_user_id')) localStorage.setItem('p2p_user_id', myID);
+        document.getElementById('myId').textContent = myID;
+
+        // ======== 2. نظام التخزين المحلي ==========
+        // حفظ المقالات في ذاكرة المتصفح
+        function saveMyPost(post) {
+            let posts = JSON.parse(localStorage.getItem('my_posts') || '[]');
+            posts.unshift(post); // أضف الجديد للأول
+            localStorage.setItem('my_posts', JSON.stringify(posts));
+            // حفظ أيضاً في "ذاكرة التخزين المؤقت" للشبكة
+            cachePost(post, myID);
+        }
+
+        // جلب مقالاتي
+        function getMyPosts() {
+            return JSON.parse(localStorage.getItem('my_posts') || '[]');
+        }
+
+        // نظام الـ Cache: حفظ مقالات الأخرين عند قراءتها
+        function cachePost(post, ownerId) {
+            let allCache = JSON.parse(localStorage.getItem('network_cache') || '{}');
+            if(!allCache[ownerId]) allCache[ownerId] = [];
+            // تجنب التكرار
+            let exists = allCache[ownerId].some(p => p.id === post.id);
+            if(!exists) {
+                allCache[ownerId].unshift(post);
+                localStorage.setItem('network_cache', JSON.stringify(allCache));
+            }
+        }
+
+        // جلب من الكاش
+        function getCache(ownerId) {
+            let allCache = JSON.parse(localStorage.getItem('network_cache') || '{}');
+            return allCache[ownerId] || [];
+        }
+
+        // ======== 3. الاتصال P2P ==========
+        function initPeer() {
+            myPeer = new Peer(myID);
+
+            myPeer.on('open', function(id) {
+                document.getElementById('status').className = 'status online';
+                document.getElementById('status').textContent = '✅ أنت متصل بالشبكة ويمكن للآخرين رؤيتك';
+                console.log('Peer connected with ID:', id);
+            });
+
+            myPeer.on('connection', function(conn) {
+                handleConnection(conn);
+            });
+
+            myPeer.on('error', function(err) {
+                console.log(err);
+                // في حالة وجود معرف مكرر أو خطأ
+                if(err.type === 'unavailable-id') {
+                    document.getElementById('status').textContent = '⚠️ المعرف مستخدم، جاري توليد جديد...';
+                    setTimeout(()=> location.reload(), 2000);
+                } else {
+                    document.getElementById('status').className = 'status offline';
+                    document.getElementById('status').textContent = '❌ خطأ في الاتصال: ' + err.type;
+                }
+            });
+        }
+
+        function handleConnection(conn) {
+            connectedPeers[conn.peer] = conn;
+            
+            conn.on('data', function(data) {
+                console.log('Received:', data);
+                if(data.type === 'REQUEST_POSTS') {
+                    // شخص يطلب مقالاتي، أرسل له ما لدي
+                    conn.send({
+                        type: 'SEND_POSTS',
+                        posts: getMyPosts(),
+                        owner: myID
+                    });
+                }
+            });
+
+            conn.on('close', function() {
+                delete connectedPeers[conn.peer];
+            });
+        }
+
+        // ======== 4. وظائف المستخدم ==========
+
+        // نشر المقال
+        function publishPost() {
+            let title = document.getElementById('titleInput').value;
+            let content = document.getElementById('contentInput').value;
+            
+            if(!title || !content) {
+                alert('الرجاء ملء العنوان والمحتوى');
+                return;
+            }
+
+            let newPost = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                timestamp: new Date().toLocaleString('ar-EG')
+            };
+
+            saveMyPost(newPost);
+            document.getElementById('titleInput').value = '';
+            document.getElementById('contentInput').value = '';
+            
+            alert('✅ تم النشر! المقال محفوظ في جهازك وسينتشر عند زيارة أي شخص لك');
+            renderPosts(getMyPosts());
+        }
+
+        // البحث عن مستخدم
+        function searchUser() {
+            let targetId = document.getElementById('searchInput').value.trim();
+            if(!targetId) return;
+
+            document.getElementById('postsContainer').innerHTML = "<p>🔄 جاري الاتصال وجلب البيانات...</p>";
+
+            // أولاً: اعرض ما موجود في الكاش فوراً
+            let cached = getCache(targetId);
+            if(cached.length > 0) {
+                renderPosts(cached, "📦 من الذاكرة المؤقتة (الكاش)");
+            } else {
+                 document.getElementById('postsContainer').innerHTML = "<p>⏳ لا يوجد نسخ محفوظة، جاري محاولة الاتصال بصاحب المدونة...</p>";
+            }
+
+            // ثانياً: حاول الاتصال المباشر
+            try {
+                let conn = myPeer.connect(targetId);
+                
+                conn.on('open', function() {
+                    handleConnection(conn);
+                    conn.send({type: 'REQUEST_POSTS'});
+                });
+
+                conn.on('data', function(data) {
+                    if(data.type === 'SEND_POSTS') {
+                        // احفظها في الكاش
+                        data.posts.forEach(p => cachePost(p, targetId));
+                        renderPosts(data.posts, "🔗 مباشرة من صاحب المدونة");
+                    }
+                });
+
+                conn.on('error', function() {
+                    if(cached.length === 0) {
+                        document.getElementById('postsContainer').innerHTML = `
+                        <div style="color:red; text-align:center; padding:20px;">
+                            ❌ تعذر الاتصال بصاحب المدونة (غير متصل حالياً)<br>
+                            ولا توجد نسخ محفوظة مسبقاً لدى أي شخص.
+                        </div>`;
+                    }
+                });
+
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // عرض المقالات
+        function renderPosts(posts, source = "") {
+            let container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+            
+            if(source) {
+                let badge = document.createElement('div');
+                badge.style.background = '#e9ecef';
+                badge.style.padding = '5px 10px';
+                badge.style.borderRadius = '5px';
+                badge.style.fontSize = '0.8em';
+                badge.textContent = source;
+                container.appendChild(badge);
+            }
+
+            if(posts.length === 0) {
+                container.innerHTML += "<p style='color:#777; text-align:center; margin-top:15px;'>لا يوجد مقالات</p>";
+                return;
+            }
+
+            posts.forEach(post => {
+                let div = document.createElement('div');
+                div.className = 'post';
+                div.innerHTML = `
+                    <h3>📌 ${post.title}</h3>
+                    <p style="font-size:0.85em; color:#666;">${post.timestamp}</p>
+                    <hr style="margin:10px 0;">
+                    <p>${post.content}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ======== بدء التشغيل ==========
+        initPeer();
+        // عرض مقالاتي عند الفتح
+        renderPosts(getMyPosts());
+
+    </script>
+</body>
+</html>
