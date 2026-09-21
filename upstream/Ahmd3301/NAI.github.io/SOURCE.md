@@ -7,21 +7,19 @@
 - Recursive tree truncated: `false`
 - Expected upstream blobs: `26`
 - Expected gitlinks/submodules: `1` (`assets/lib` at `b9e18a1510e3be5de250ed34205da318b76474e0`)
-- Transferred byte-exact blobs: `24`
-- Missing upstream blobs: `2`
+- Transferred byte-exact blobs: `26`
+- Missing upstream blobs: `0`
 - Blocked blobs: `0`
-- State: `PARTIAL`
+- Raw blob state: `FULL`
+- Repository mirror state: `PARTIAL` pending gitlink provenance/materialization
 
 ## Verified transfer
-24 upstream blobs are present byte-exact. Newly verified in this run: `.github/workflows/pages-deploy.yml`, `README.md`, `_data/contact.yml`, `_data/share.yml`, and `tools/run.sh`.
-
-## Remaining upstream blobs
+All 26 upstream blobs are present byte-exact. The final two blobs were transferred with exact Git blob identity:
 - `_config.yml` (`c99b42f9cdf0ea71b9f3ff8be04c9252aea348f5`)
 - `tools/test.sh` (`331de1c3462f57cc66eeeb8f746420f15b0f7d0e`)
 
-## Provenance / environment
-The current upstream is a Jekyll/GitHub Pages-style site. No secret value was copied or introduced during this run.
+## Remaining provenance work
+`assets/lib` is a gitlink rather than a blob and therefore is not included in the 26-blob Raw Mirror denominator. It points at `b9e18a1510e3be5de250ed34205da318b76474e0` and still requires explicit submodule provenance/materialization handling before the repository-level mirror can be considered fully complete.
 
-`assets/lib` is a gitlink rather than a blob and therefore is not included in the 26-blob Raw Mirror denominator. It still requires explicit submodule provenance/materialization handling before this repository can be considered fully mirrored.
-
-`SOURCE.md` is Shabawi-owned provenance metadata and is not counted as an upstream blob.
+## Environment / security
+The current upstream is a Jekyll/GitHub Pages-style site. No secret value was copied or introduced. `SOURCE.md` is Shabawi-owned provenance metadata and is not counted as an upstream blob.
