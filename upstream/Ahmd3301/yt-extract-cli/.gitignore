@@ -1,0 +1,4 @@
+node_modules/
+dist/
+bin/yt-dlp.exe
+bin/yt-dlp
