@@ -11,15 +11,17 @@
 - Missing upstream blobs: `0`
 - Blocked blobs: `0`
 - Raw blob state: `FULL`
-- Repository mirror state: `PARTIAL` pending gitlink provenance/materialization
+- Repository mirror state: `BLOCKED` only at gitlink materialization boundary; all upstream blobs are FULL
 
 ## Verified transfer
 All 26 upstream blobs are present byte-exact. The final two blobs were transferred with exact Git blob identity:
 - `_config.yml` (`c99b42f9cdf0ea71b9f3ff8be04c9252aea348f5`)
 - `tools/test.sh` (`331de1c3462f57cc66eeeb8f746420f15b0f7d0e`)
 
-## Remaining provenance work
-`assets/lib` is a gitlink rather than a blob and therefore is not included in the 26-blob Raw Mirror denominator. It points at `b9e18a1510e3be5de250ed34205da318b76474e0` and still requires explicit submodule provenance/materialization handling before the repository-level mirror can be considered fully complete.
+## Gitlink provenance
+The upstream `.gitmodules` file resolves `assets/lib` to the public repository `cotes2020/chirpy-static-assets`. The exact gitlink target `b9e18a1510e3be5de250ed34205da318b76474e0` was independently resolved in that repository and exists as a valid signed commit; its tree is `d30f0be7df596d6e0f82c216df016f014414cc6b`.
+
+The gitlink is not an upstream blob and is therefore excluded from the 26-blob Raw Mirror denominator. Materializing the external repository inside this raw mirror would change the semantics from a gitlink to copied files, while the current GitHub connector cannot create a cross-repository gitlink object in the destination repository. The boundary is therefore explicitly recorded as BLOCKED rather than silently omitted or falsely marked FULL.
 
 ## Environment / security
 The current upstream is a Jekyll/GitHub Pages-style site. No secret value was copied or introduced. `SOURCE.md` is Shabawi-owned provenance metadata and is not counted as an upstream blob.
