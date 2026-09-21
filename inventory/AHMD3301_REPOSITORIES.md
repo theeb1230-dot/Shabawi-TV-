@@ -23,7 +23,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 |cfyb|main|EMPTY|EMPTY|0|0|0|EMPTY|
 |cfyt|main|3924dd6ea15daac83b35b48e4e7c414041d7614b|9215695d1b40204a0d144f45af9a61836eaffa44|10|0|10|BLOCKED|
 |yt-extract-cli|master|b0244b3f6c4c2d4da505fa54aed42b1f197615ac|6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5|9|9|0|FULL|
-|yt-info|main|825fa28ad1a0e877e5a5123e2ba30a967586d26e|286e54f3f4020c810437908a56e608ab024a2854|11|0|11|PARTIAL|
+|yt-info|main|825fa28ad1a0e877e5a5123e2ba30a967586d26e|286e54f3f4020c810437908a56e608ab024a2854|11|10|1|PARTIAL|
 |mediaplyr|main|59da5a8cdcc945858092874266b112d18188f165|9bafc80b13c7bd31d4e3b1f8da49cc56eb938155|4|0|4|PARTIAL|
 |TVNAI3|main|f92e8cccef53df3c712ae2848b0deec9c2734265|5742b81180f172e6869096a534c2c2fab98e63f9|1|1|0|FULL|
 |Netflix.github.io|main|c908d73092fc779d43afebe35a821a48a3eb7a1e|b7e51513514b8006121ada489a3fb10c7addbd0f|1|1|0|FULL|
@@ -54,6 +54,8 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 - `abcd`: operational browser automation explicitly bypasses Cloudflare/Turnstile and persists session cookies for reuse; 6 blobs remain BLOCKED at the public-mirror security boundary.
 
 ## Mirror evidence this run
+- New continuation start main: `6a435ab5bd562eae7d6b06d93c05f8194b7b0419`; account discovery remains 49 public repositories and destination admin/push permission is confirmed.
+- Advanced `yt-info` at exact upstream commit `825fa28ad1a0e877e5a5123e2ba30a967586d26e`: copied the 10 known source/config blobs from the verified tree paths (`.gitignore`, package manifests, tsconfig, and six TypeScript source files). The strict tree expects 11 blobs, so status remains PARTIAL 10/11 until the remaining path is identified and verified; no FULL claim is made.
 - New continuation start main: `0d24cb58c6acfebcf31f157506e0d8494d695e86`; discovery re-run found 49 public repositories and destination admin/push permission remains available.
 - Corrected `Omina` expected blob count from 2 to 1 after direct inspection of exact upstream commit `a75a1c9f9f62c5ba57a21974573a132146a2bfcc`: the commit contains only `index.html`. Destination blob `ad0eade5563549a7b7655ab840881c7a7c85caf7` was already verified byte-exact, therefore `Omina` is now FULL 1/1. This correction reduces the strict denominator rather than inventing a missing blob.
 - New continuation start main: `0b33e0cd9f5c872de7de4b699f52cc05582cba82`; current discovery remains 49 and destination admin/push permission is confirmed.
@@ -72,7 +74,7 @@ Refreshed from the public GitHub account Ahmd3301 on 2026-09-20.
 ## Coverage snapshot
 - Inventory Coverage: **28/49 = 57.1%** current commit/tree/blob verified in the strict table.
 - Physical Representation: **49/49 = 100.0%**.
-- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **35/206 blobs are byte-exact = 17.0%**, with **29 BLOCKED** and **142** other missing/PARTIAL. Three newly mirrored one-blob repositories are content-complete but are not yet credited to strict Inventory Coverage because their exact tree SHA still needs independent capture. This subset ratio is evidence, not the project-wide ratio.
+- Raw Mirror Completeness: **not yet promoted to a project-wide percentage** because a fresh expected-blob denominator for all 49 is still incomplete. In the strict verified subset, **45/206 blobs are byte-exact = 21.8%**, with **29 BLOCKED** and **132** other missing/PARTIAL. Three newly mirrored one-blob repositories are content-complete but are not yet credited to strict Inventory Coverage because their exact tree SHA still needs independent capture. This subset ratio is evidence, not the project-wide ratio.
 - Overall Verified Project Completion: **10.0%** under the fixed weighted model. No runtime/E2E/release credit was added.
 
 ## Coverage policy
