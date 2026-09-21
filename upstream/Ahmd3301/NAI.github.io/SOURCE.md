@@ -7,13 +7,17 @@
 - Recursive tree truncated: `false`
 - Expected upstream blobs: `26`
 - Expected gitlinks/submodules: `1` (`assets/lib` at `b9e18a1510e3be5de250ed34205da318b76474e0`)
-- Transferred byte-exact blobs: `19`
-- Missing upstream blobs: `7`
+- Transferred byte-exact blobs: `24`
+- Missing upstream blobs: `2`
 - Blocked blobs: `0`
 - State: `PARTIAL`
 
 ## Verified transfer
-19 upstream blobs are present byte-exact. This includes `LICENSE`, `index.html`, all four `_tabs` files, `.devcontainer/*`, `.editorconfig`, `.gitattributes`, `.gitignore`, `.gitmodules`, `.nojekyll`, all three `.vscode` files, `_posts/.placeholder`, `Gemfile`, and `_plugins/posts-lastmod-hook.rb`.
+24 upstream blobs are present byte-exact. Newly verified in this run: `.github/workflows/pages-deploy.yml`, `README.md`, `_data/contact.yml`, `_data/share.yml`, and `tools/run.sh`.
+
+## Remaining upstream blobs
+- `_config.yml` (`c99b42f9cdf0ea71b9f3ff8be04c9252aea348f5`)
+- `tools/test.sh` (`331de1c3462f57cc66eeeb8f746420f15b0f7d0e`)
 
 ## Provenance / environment
 The current upstream is a Jekyll/GitHub Pages-style site. No secret value was copied or introduced during this run.
