@@ -7,8 +7,8 @@
 - Recursive tree truncated: `false`
 - Expected upstream blobs: `11`
 - Transferred byte-exact blobs: `5`
-- Missing upstream blobs: `6`
-- Blocked blobs: `0`
+- Missing upstream blobs: `0`
+- Blocked blobs: `6`
 - Gitlinks/submodules: `0`
 - Raw mirror state: `PARTIAL`
 
@@ -19,13 +19,15 @@
 - `scripts/monitor.py` — `87bd1211ddc67af08e5a3cd3371c112d0cf2a9f5`
 - `scripts/nm3u8_progress.py` — `f564f6358e1840022e4cc1afedf477ea36a81e9b`
 
-## Remaining upstream blobs
-- `.github/workflows/faselhd-farm.yml` — `b2e38d04cf914fb2c6966334acb7488e95ea654c`
-- `docs/03-STRUCTURE-AND-CODE.md` — `549d49cedfe44faa931c500d1d1a269d9a1790a1`
-- `farm/main_bot.py` — `637f5cb163f481b93b7ffc58014a0d2aa1066c1f`
-- `farm/worker.py` — `fe3163e9ef72071cd48af802d19bd9f536ccc5f2`
-- `scripts/exFaselHD1234.js` — `83702c5852ff460f2b5a57c796aaac28f84d6085`
-- `scripts/tg_upload.py` — `c5418149b2c7d2f9baea8ae35de230bd7eb73022`
+## Blocked upstream blobs
+The connected GitHub transport can read these objects, but the byte-preserving base64 response is truncated before the complete payload can be supplied to `create_blob`. UTF-8 decode/re-encode was tested and does not preserve the upstream Git blob SHA, so these are deliberately not written as false byte-exact mirrors. They remain in the global Raw Mirror denominator.
+
+- `.github/workflows/faselhd-farm.yml` — `b2e38d04cf914fb2c6966334acb7488e95ea654c` — 19,859 bytes — `TOOLING_BASE64_TRUNCATION`
+- `docs/03-STRUCTURE-AND-CODE.md` — `549d49cedfe44faa931c500d1d1a269d9a1790a1` — 100,625 bytes — `TOOLING_BASE64_TRUNCATION`
+- `farm/main_bot.py` — `637f5cb163f481b93b7ffc58014a0d2aa1066c1f` — 22,522 bytes — `TOOLING_BASE64_TRUNCATION`
+- `farm/worker.py` — `fe3163e9ef72071cd48af802d19bd9f536ccc5f2` — 8,962 bytes — `TOOLING_BASE64_TRUNCATION`
+- `scripts/exFaselHD1234.js` — `83702c5852ff460f2b5a57c796aaac28f84d6085` — 16,474 bytes — `TOOLING_BASE64_TRUNCATION`
+- `scripts/tg_upload.py` — `c5418149b2c7d2f9baea8ae35de230bd7eb73022` — 16,265 bytes — `TOOLING_BASE64_TRUNCATION`
 
 ## Analysis
 Technologies: Node.js extraction script, Python bot/worker/farm, Redis-compatible coordination, GitHub Actions, HLS tooling. Useful Shabawi capability: parse series/seasons/episodes/player URLs, resolve working player pages, derive HLS/master m3u8 candidates, and worker/monitor patterns.
