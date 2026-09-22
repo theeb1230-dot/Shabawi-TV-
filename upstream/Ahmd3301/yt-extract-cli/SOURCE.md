@@ -6,16 +6,17 @@ Exact commit SHA: `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`
 Exact tree SHA: `6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5`
 Recursive tree truncated: `false`
 Expected upstream blobs: `10`
-Transferred exact blobs: `3`
-Missing blobs: `7`
+Transferred exact blobs: `10`
+Missing blobs: `0`
 Blocked blobs: `0`
-State: `PARTIAL`
+Gitlinks/submodules: `0`
+State: `FULL`
 
 ## Blob accounting
-- `.gitignore` — transferred byte-exact; upstream blob SHA `ce59d521feadd8ec786b6a9f14e44a3059ac9fbf`.
-- `bin/yt-extract.js` — transferred byte-exact; upstream blob SHA `907c618f0e6c632382a4855c41bc2dbc793509bd`.
-- `package.json` — transferred byte-exact; upstream blob SHA `0c5bcb82cb7deaec2919b1c9f540605c1d279b81`.
-- Remaining upstream blobs: `README.md`, `package-lock.json`, `src/extractor.ts`, `src/formatter.ts`, `src/index.ts`, `src/logger.ts`, `tsconfig.json`.
+All 10 upstream blobs are present byte-exact at their original paths: `.gitignore`, `README.md`, `bin/yt-extract.js`, `package-lock.json`, `package.json`, `src/extractor.ts`, `src/formatter.ts`, `src/index.ts`, `src/logger.ts`, and `tsconfig.json`.
+
+## Verification
+Current upstream branch `master` remains at commit `b0244b3f6c4c2d4da505fa54aed42b1f197615ac`, tree `6f1bd0a789a5d5bbcb3e2b99554c2aff4be1f7e5`. The previously missing `src/extractor.ts` was transferred with Git blob SHA `9e3a16cb4f71a1b789aedfa4def855919bddb068`, matching upstream exactly. Existing destination blobs were rechecked by Git blob SHA during this closure pass.
 
 ## Analysis
 TypeScript/Node.js CLI wrapper around yt-dlp. It extracts video metadata and direct format URLs and is useful as Shabawi diagnostics/tooling rather than a mandatory mobile runtime dependency. No database schema, migration, workflow, or committed secret was observed in the current tree. README states MIT, but the current upstream tree does not contain a standalone LICENSE file, so no absent license file is fabricated here.
