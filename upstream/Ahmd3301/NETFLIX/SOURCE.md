@@ -1,22 +1,23 @@
-# NETFLIX upstream record
+# Upstream provenance — Ahmd3301/NETFLIX
 
-- Source: `Ahmd3301/NETFLIX`
+- Source: Ahmd3301/NETFLIX
 - Default branch: `main`
-- Exact commit SHA: `ca734f4ebb0cfcd5732c06257b1281c9a5fd0153`
-- Exact tree SHA: `510fbbfe258490917c1507ca36ec3d69fabc4b84`
+- Exact commit: `ca734f4ebb0cfcd5732c06257b1281c9a5fd0153`
+- Exact tree: `510fbbfe258490917c1507ca36ec3d69fabc4b84`
 - Recursive tree truncated: `false`
-- Expected upstream blobs: `3`
-- Transferred byte-exact blobs: `0`
-- Missing/blocked blobs: `3`
-- State: `BLOCKED`
+- Expected upstream blobs: **3**
+- Byte-exact transferred blobs: **1**
+- Missing upstream blobs: **0**
+- Blocked upstream blobs: **2**
+- Gitlinks/submodules: **0**
+- Mirror state: **BLOCKED**
 
-## Safety/provenance note
+## Blob accounting
 
-The upstream contains a credential-harvesting login clone. `script.js` collects entered email/password plus IP/device metadata and sends them to Telegram using hard-coded live-looking Telegram credentials. Those operational files are not republished into this public aggregation repository. No token, chat identifier, captured credential, or secret value is recorded here.
+- `styles.css` — transferred byte-exact; destination blob SHA `9a2aa0a7209ad249a94581476135e99576ca89e1` matches upstream.
+- `index.html` — BLOCKED_SECURITY: deceptive credential-collection/login interface; not linked into the mirror tree.
+- `script.js` — BLOCKED_SECURITY: captures credentials/device/IP data, transmits them externally, and contains embedded credential material; neither code nor secret values are mirrored.
 
-Blocked paths:
-- `index.html` — phishing/credential-harvesting UI component.
-- `script.js` — credential collection/exfiltration logic and embedded secret material.
-- `styles.css` — presentation component of the same credential-harvesting page.
+## Security/provenance note
 
-This record preserves exact provenance and counts without treating `SOURCE.md` as an upstream blob.
+Blocked blobs remain in the raw-mirror denominator. No credential values, tokens, cookies, or credential-harvesting implementation are copied into the Shabawi TV tree. The upstream tree at this exact commit contains no LICENSE/NOTICE, gitlinks, database schema/migration, or safe environment contract to preserve.
