@@ -38,8 +38,8 @@ class PlaybackSource:
             raise ValueError("playback source id is required")
         if not self.url.startswith(("https://", "http://")):
             raise ValueError("playback source url must be absolute")
-        if self.protocol is StreamProtocol.WEBVIEW:
-            self.playable_native = False
+        if self.protocol is StreamProtocol.WEBVIEW and self.playable_native:
+            raise ValueError("WebView fallback cannot be marked native-playable")
 
 
 @dataclass(frozen=True)
