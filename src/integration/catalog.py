@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Optional
 
-from .models import CatalogItem, Episode, LiveChannel, PlaybackSource, ProviderRegistry, native_first
+from .models import CatalogItem, Episode, PlaybackSource, ProviderRegistry, native_first
 
 
 @dataclass(frozen=True)
