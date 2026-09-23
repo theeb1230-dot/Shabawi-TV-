@@ -16,17 +16,27 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p inventory
+          : > inventory/ahmd3301-repos.ndjson
+          : > inventory/ahmd3301-current.tsv
           gh api --paginate 'users/Ahmd3301/repos?type=public&per_page=100' --jq '.[] | {name,default_branch,html_url}' > inventory/ahmd3301-repos.ndjson
           count=$(wc -l < inventory/ahmd3301-repos.ndjson | tr -d ' ')
           test "$count" -gt 0
           echo "Ahmd3301 public repositories: $count"
           echo "public_repo_count=$count" > inventory/ahmd3301-summary.txt
+          printf 'repo\tdefault_branch\tcommit_sha\ttree_sha\tblob_count\tstate\n' >> inventory/ahmd3301-current.tsv
           while IFS= read -r row; do
             repo=$(printf '%s' "$row" | jq -r '.name')
             branch=$(printf '%s' "$row" | jq -r '.default_branch')
-            commit=$(gh api "repos/Ahmd3301/$repo/commits/$branch" --jq '.sha')
-            tree=$(gh api "repos/Ahmd3301/$repo/git/trees/$commit?recursive=1")
-            printf '%s\t%s\t%s\t%s\n' "$repo" "$branch" "$commit" "$(printf '%s' "$tree" | jq -r '.tree | map(select(.type=="blob")) | length')" >> inventory/ahmd3301-current.tsv
+            commit_response=$(gh api "repos/Ahmd3301/$repo/commits/$branch" 2>/tmp/commit-error || true)
+            if [ -z "$commit_response" ] || printf '%s' "$commit_response" | jq -e '.message == "Git Repository is empty."' >/dev/null 2>&1; then
+              printf '%s\t%s\t-\t-\t0\tEMPTY\n' "$repo" "$branch" >> inventory/ahmd3301-current.tsv
+              continue
+            fi
+            commit=$(printf '%s' "$commit_response" | jq -r '.sha')
+            tree_response=$(gh api "repos/Ahmd3301/$repo/git/trees/$commit?recursive=1")
+            tree_sha=$(printf '%s' "$tree_response" | jq -r '.sha')
+            blob_count=$(printf '%s' "$tree_response" | jq -r '[.tree[] | select(.type=="blob")] | length')
+            printf '%s\t%s\t%s\t%s\t%s\tVERIFIED\n' "$repo" "$branch" "$commit" "$tree_sha" "$blob_count" >> inventory/ahmd3301-current.tsv
           done < inventory/ahmd3301-repos.ndjson
       - name: Verify provenance guard
         run: python3 scripts/verify_provenance.py
@@ -34,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ahmd3301-live-inventory
-          path: inventory/ahmd3301-*
+          path: inventory/ahmd3301-*\
