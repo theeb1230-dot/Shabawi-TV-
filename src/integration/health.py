@@ -22,6 +22,8 @@ class HealthRecord:
 
 
 class SourceHealth:
+    """Bounded in-memory health feedback with deterministic ranking."""
+
     def __init__(self) -> None:
         self._records: dict[str, HealthRecord] = {}
 
@@ -35,7 +37,10 @@ class SourceHealth:
         record.last_failure_at = monotonic()
 
     def score(self, source_id: str) -> float:
-        return self._records.get(source_id, HealthRecord()).score
+        return max(0.0, min(1.0, self._records.get(source_id, HealthRecord()).score))
+
+    def scores(self) -> dict[str, float]:
+        return {source_id: self.score(source_id) for source_id in self._records}
 
     def rank(self, sources: list[PlaybackSource]) -> list[PlaybackSource]:
         """Native-first, then highest health score, then stable id."""
