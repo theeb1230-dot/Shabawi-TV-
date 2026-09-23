@@ -10,15 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify current public repo count
-        id: inventory
+      - name: Build live repository inventory
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          count="$(gh api --paginate 'users/Ahmd3301/repos?type=public&per_page=100' --jq 'length' | awk '{s+=$1} END{print s+0}')"
+          mkdir -p inventory
+          gh api --paginate 'users/Ahmd3301/repos?type=public&per_page=100' --jq '.[] | {name,default_branch,html_url}' > inventory/ahmd3301-repos.ndjson
+          count=$(wc -l < inventory/ahmd3301-repos.ndjson | tr -d ' ')
           test "$count" -gt 0
           echo "Ahmd3301 public repositories: $count"
-          echo "repo_count=$count" >> "$GITHUB_OUTPUT"
+          echo "public_repo_count=$count" > inventory/ahmd3301-summary.txt
+          while IFS= read -r row; do
+            repo=$(printf '%s' "$row" | jq -r '.name')
+            branch=$(printf '%s' "$row" | jq -r '.default_branch')
+            commit=$(gh api "repos/Ahmd3301/$repo/commits/$branch" --jq '.sha')
+            tree=$(gh api "repos/Ahmd3301/$repo/git/trees/$commit?recursive=1")
+            printf '%s\t%s\t%s\t%s\n' "$repo" "$branch" "$commit" "$(printf '%s' "$tree" | jq -r '.tree | map(select(.type=="blob")) | length')" >> inventory/ahmd3301-current.tsv
+          done < inventory/ahmd3301-repos.ndjson
       - name: Verify provenance guard
         run: python3 scripts/verify_provenance.py
+      - name: Upload live inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: ahmd3301-live-inventory
+          path: inventory/ahmd3301-*
