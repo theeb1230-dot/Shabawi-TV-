@@ -19,3 +19,13 @@ def test_health_ranks_native_and_successful_sources_first():
 def test_unknown_sources_are_neutral():
     health = SourceHealth()
     assert health.score("missing") == 0.5
+
+
+def test_health_score_is_bounded_after_repeated_feedback():
+    health = SourceHealth()
+    for _ in range(20):
+        health.mark_failure("hls")
+    assert health.score("hls") == 0.0
+    for _ in range(50):
+        health.mark_success("hls")
+    assert 0.0 <= health.score("hls") <= 1.0
