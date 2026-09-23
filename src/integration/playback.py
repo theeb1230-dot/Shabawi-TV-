@@ -21,7 +21,7 @@ class PlaybackResult:
 
 
 class PlaybackCoordinator:
-    """Try healthy native sources first, then an explicit WebView fallback."""
+    """Try native sources first, then explicit WebView fallback."""
 
     def __init__(self, opener: Callable[[PlaybackSource], bool]) -> None:
         self._opener = opener
@@ -33,8 +33,8 @@ class PlaybackCoordinator:
         return sorted(
             validated,
             key=lambda source: (
-                source.playable_native is False,
                 source.protocol is StreamProtocol.WEBVIEW,
+                not source.playable_native,
                 source.quality or "",
                 source.id,
             ),
@@ -48,7 +48,7 @@ class PlaybackCoordinator:
                     attempts.append(PlaybackAttempt(source.id, True))
                     return PlaybackResult(source, tuple(attempts))
                 attempts.append(PlaybackAttempt(source.id, False, "opener rejected source"))
-            except Exception as exc:  # provider/player adapters must not crash the caller
+            except Exception as exc:
                 attempts.append(PlaybackAttempt(source.id, False, str(exc)))
         return PlaybackResult(None, tuple(attempts))
 
