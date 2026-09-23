@@ -11,11 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify current public repo count
+        id: inventory
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          count=$(gh api --paginate /users/Ahmd3301/repos -f type=public -f per_page=100 --jq 'length' | awk '{s+=$1} END{print s+0}')
+          count="$(gh api --paginate 'users/Ahmd3301/repos?type=public&per_page=100' --jq 'length' | awk '{s+=$1} END{print s+0}')"
           test "$count" -gt 0
           echo "Ahmd3301 public repositories: $count"
           echo "repo_count=$count" >> "$GITHUB_OUTPUT"
