@@ -1,0 +1,27 @@
+name: Shabawi Integration Contracts
+
+on:
+  push:
+    paths:
+      - "src/integration/**"
+      - "tests/**"
+      - ".github/workflows/integration-contracts.yml"
+  pull_request:
+    paths:
+      - "src/integration/**"
+      - "tests/**"
+      - ".github/workflows/integration-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run canonical contract tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Run provenance guard
+        run: python3 scripts/verify_provenance.py
