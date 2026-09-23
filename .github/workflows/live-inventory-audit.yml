@@ -1,0 +1,23 @@
+name: Live Ahmd3301 Inventory Audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify current public repo count
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          count=$(gh api --paginate /users/Ahmd3301/repos -f type=public -f per_page=100 --jq 'length' | awk '{s+=$1} END{print s+0}')
+          test "$count" -gt 0
+          echo "Ahmd3301 public repositories: $count"
+          echo "repo_count=$count" >> "$GITHUB_OUTPUT"
+      - name: Verify provenance guard
+        run: python3 scripts/verify_provenance.py
