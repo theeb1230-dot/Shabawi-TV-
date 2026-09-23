@@ -92,6 +92,13 @@ class ProviderRegistry:
     def names(self) -> tuple[str, ...]:
         return tuple(sorted(self._providers))
 
+    def display_name(self, provider_id: str) -> str:
+        key = provider_id.strip().lower()
+        try:
+            return self._providers[key]
+        except KeyError as exc:
+            raise KeyError(f"provider is not registered: {provider_id}") from exc
+
     def is_registered(self, provider_id: str) -> bool:
         return provider_id.strip().lower() in self._providers
 
