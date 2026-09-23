@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Mapping
 
 from .models import PlaybackSource, StreamProtocol
 
@@ -21,10 +21,22 @@ class PlaybackResult:
 
 
 class PlaybackCoordinator:
-    """Try native sources first, then explicit WebView fallback."""
+    """Try healthy native sources first, then explicit WebView fallback."""
 
-    def __init__(self, opener: Callable[[PlaybackSource], bool]) -> None:
+    _PROTOCOL_PRIORITY = {
+        StreamProtocol.HLS: 0,
+        StreamProtocol.DASH: 1,
+        StreamProtocol.FILE: 2,
+        StreamProtocol.WEBVIEW: 3,
+    }
+
+    def __init__(
+        self,
+        opener: Callable[[PlaybackSource], bool],
+        health_scores: Mapping[str, float] | None = None,
+    ) -> None:
         self._opener = opener
+        self._health_scores = dict(health_scores or {})
 
     def ordered_sources(self, sources: Iterable[PlaybackSource]) -> list[PlaybackSource]:
         validated = list(sources)
@@ -35,6 +47,8 @@ class PlaybackCoordinator:
             key=lambda source: (
                 source.protocol is StreamProtocol.WEBVIEW,
                 not source.playable_native,
+                -float(self._health_scores.get(source.id, 0.0)),
+                self._PROTOCOL_PRIORITY[source.protocol],
                 source.quality or "",
                 source.id,
             ),
