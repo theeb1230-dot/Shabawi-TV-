@@ -8,6 +8,7 @@ Transferred byte-exact upstream blobs: 27
 Missing upstream blobs: 0
 Blocked upstream blobs: 0
 Mirror state: FULL
+Machine-readable counts: expected=27 transferred=27 missing=0 blocked=0 state=FULL
 Tree enumeration: recursive, truncated=false
 
 Decision: KEEP historical/reference.
