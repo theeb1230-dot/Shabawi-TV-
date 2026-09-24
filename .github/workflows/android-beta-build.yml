@@ -20,6 +20,7 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           cmdline-tools-version: 12266719
+          packages: ''
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses >/dev/null || true
       - name: Install Android SDK packages
