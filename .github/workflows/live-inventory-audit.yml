@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p inventory
+          mkdir -p inventory inventory/ahmd3301-blob-shas
           : > inventory/ahmd3301-repos.ndjson
           : > inventory/ahmd3301-current.tsv
 
@@ -47,6 +47,7 @@ jobs:
                printf '%s' "$commit_response" | jq -e '.message == "Git Repository is empty."' >/dev/null 2>&1; then
               printf '%s\t%s\t-\t-\t0\tEMPTY\n' "$repo" "$branch" \
                 >> inventory/ahmd3301-current.tsv
+              : > "inventory/ahmd3301-blob-shas/$repo.tsv"
               empty=$((empty + 1))
               continue
             fi
@@ -58,6 +59,8 @@ jobs:
             printf '%s\t%s\t%s\t%s\t%s\tVERIFIED\n' \
               "$repo" "$branch" "$commit" "$tree_sha" "$blob_count" \
               >> inventory/ahmd3301-current.tsv
+            printf '%s' "$tree_response" | jq -r '.tree[] | select(.type=="blob") | [.path,.sha] | @tsv' \
+              > "inventory/ahmd3301-blob-shas/$repo.tsv"
             verified=$((verified + 1))
           done < inventory/ahmd3301-repos.ndjson
 
@@ -66,10 +69,13 @@ jobs:
             echo "empty_repo_count=$empty"
           } >> inventory/ahmd3301-summary.txt
 
+      - name: Reconcile raw mirror and physical representation
+        run: python3 scripts/reconcile_mirror.py
+
       - name: Verify provenance guard
         run: python3 scripts/verify_provenance.py
 
-      - name: Upload live inventory
+      - name: Upload live inventory and reconciliation
         uses: actions/upload-artifact@v4
         with:
           name: ahmd3301-live-inventory
@@ -77,5 +83,8 @@ jobs:
             inventory/ahmd3301-repos.ndjson
             inventory/ahmd3301-current.tsv
             inventory/ahmd3301-summary.txt
+            inventory/ahmd3301-blob-shas
+            inventory/ahmd3301-mirror-reconciliation.tsv
+            inventory/ahmd3301-mirror-summary.txt
           if-no-files-found: error
           retention-days: 14
