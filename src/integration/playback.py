@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Callable, Iterable, Mapping
 
 from .models import PlaybackSource, StreamProtocol
+from .retry import RetryPolicy
 from .session import PlaybackSession
 
 if TYPE_CHECKING:
@@ -45,15 +46,21 @@ class PlaybackCoordinator:
         health_scores: Mapping[str, float] | None = None,
         health: "SourceHealth | None" = None,
         session: PlaybackSession | None = None,
+        retry_policy: RetryPolicy | None = None,
     ) -> None:
         self._opener = opener
         self._health = health
         self._health_scores = dict(health_scores or {})
         self._session = session
+        self._retry_policy = retry_policy or RetryPolicy()
 
     @property
     def session(self) -> PlaybackSession | None:
         return self._session
+
+    @property
+    def retry_policy(self) -> RetryPolicy:
+        return self._retry_policy
 
     def checkpoint(self, position_seconds: float) -> PlaybackSession | None:
         """Persist a lifecycle checkpoint for the active session, if any."""
@@ -96,20 +103,23 @@ class PlaybackCoordinator:
     def play(self, sources: Iterable[PlaybackSource]) -> PlaybackResult:
         attempts: list[PlaybackAttempt] = []
         for source in self.ordered_sources(sources):
-            try:
-                if self._opener(source):
+            for attempt_number in range(1, self._retry_policy.max_attempts + 1):
+                try:
+                    if self._opener(source):
+                        if self._health is not None:
+                            self._health.mark_success(source.id)
+                        self._bind_session_to_source(source)
+                        attempts.append(PlaybackAttempt(source.id, True))
+                        return PlaybackResult(source, tuple(attempts))
                     if self._health is not None:
-                        self._health.mark_success(source.id)
-                    self._bind_session_to_source(source)
-                    attempts.append(PlaybackAttempt(source.id, True))
-                    return PlaybackResult(source, tuple(attempts))
-                if self._health is not None:
-                    self._health.mark_failure(source.id)
-                attempts.append(PlaybackAttempt(source.id, False, "opener rejected source"))
-            except Exception as exc:
-                if self._health is not None:
-                    self._health.mark_failure(source.id)
-                attempts.append(PlaybackAttempt(source.id, False, str(exc)))
+                        self._health.mark_failure(source.id)
+                    attempts.append(PlaybackAttempt(source.id, False, "opener rejected source"))
+                except Exception as exc:
+                    if self._health is not None:
+                        self._health.mark_failure(source.id)
+                    attempts.append(PlaybackAttempt(source.id, False, str(exc)))
+                if not self._retry_policy.decide(attempt_number).should_retry:
+                    break
         return PlaybackResult(None, tuple(attempts))
 
 
