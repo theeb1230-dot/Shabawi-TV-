@@ -17,6 +17,7 @@ import java.util.List;
 
 public final class MainActivity extends Activity {
     private final List<CatalogItem> catalog = CatalogRepository.seed();
+    private final ProviderRegistry providers = new ProviderRegistry();
     private LinearLayout content;
 
     @Override public void onCreate(Bundle state) {
@@ -47,6 +48,11 @@ public final class MainActivity extends Activity {
         section.setPadding(0, 24, 0, 12);
         root.addView(section, fullWidth());
         for (CatalogItem item : catalog) addCard(root, item);
+
+        Button liveButton = new Button(this);
+        liveButton.setText("القنوات المباشرة");
+        liveButton.setOnClickListener(v -> showLive());
+        root.addView(liveButton, fullWidth());
 
         Button searchButton = new Button(this);
         searchButton.setText("عرض نتائج البحث");
@@ -79,10 +85,56 @@ public final class MainActivity extends Activity {
         root.addView(back, fullWidth());
         root.addView(text(item.title, 28, Color.rgb(212, 175, 55)), fullWidth());
         root.addView(text(item.subtitle + "\nالتصنيف: " + item.kind, 18, Color.WHITE), fullWidth());
+
+        List<Episode> episodes = providers.episodesFor(item);
+        if (!episodes.isEmpty()) {
+            root.addView(text("الموسم 1", 20, Color.WHITE), fullWidth());
+            for (Episode episode : episodes) {
+                Button episodeButton = new Button(this);
+                episodeButton.setAllCaps(false);
+                episodeButton.setText(episode.number + ". " + episode.title);
+                episodeButton.setOnClickListener(v -> showPlayback(episode.title, episode.sources));
+                root.addView(episodeButton, fullWidth());
+            }
+        }
+
         Button play = new Button(this);
-        play.setText("تشغيل تجريبي");
-        play.setOnClickListener(v -> showMessage(root, "مسار التشغيل سيُربط بعد إضافة PlaybackSource وHealth/Fallback."));
+        play.setText("تشغيل المصدر الأول");
+        play.setOnClickListener(v -> showPlayback(item.title, providers.sourcesFor(item)));
         root.addView(play, fullWidth());
+        setContentView(wrap(root));
+    }
+
+    private void showLive() {
+        LinearLayout root = baseLayout();
+        Button back = new Button(this);
+        back.setText("رجوع");
+        back.setOnClickListener(v -> showHome());
+        root.addView(back, fullWidth());
+        root.addView(text("القنوات المباشرة", 24, Color.WHITE), fullWidth());
+        for (LiveChannel channel : providers.liveChannels()) {
+            Button item = new Button(this);
+            item.setAllCaps(false);
+            item.setText(channel.name + "\n" + channel.category);
+            item.setOnClickListener(v -> showPlayback(channel.name, channel.sources));
+            root.addView(item, fullWidth());
+        }
+        setContentView(wrap(root));
+    }
+
+    private void showPlayback(String title, List<PlaybackSource> sources) {
+        LinearLayout root = baseLayout();
+        Button back = new Button(this);
+        back.setText("رجوع");
+        back.setOnClickListener(v -> showHome());
+        root.addView(back, fullWidth());
+        root.addView(text("التشغيل: " + title, 24, Color.rgb(212, 175, 55)), fullWidth());
+        root.addView(text("Native-first playback seam", 16, Color.LTGRAY), fullWidth());
+        for (PlaybackSource source : sources) {
+            TextView row = text(source.label + " · " + source.type + " · أولوية " + source.priority, 16, Color.WHITE);
+            root.addView(row, fullWidth());
+        }
+        root.addView(text("المصادر التجريبية لا تُشغّل شبكة فعلية بعد؛ طبقة native player وhealth/fallback هي الخطوة التالية.", 16, Color.LTGRAY), fullWidth());
         setContentView(wrap(root));
     }
 
@@ -123,9 +175,5 @@ public final class MainActivity extends Activity {
         v.setTextColor(color);
         v.setPadding(0, 8, 0, 8);
         return v;
-    }
-
-    private void showMessage(LinearLayout root, String message) {
-        root.addView(text(message, 16, Color.LTGRAY), fullWidth());
     }
 }
