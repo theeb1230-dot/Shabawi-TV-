@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Iterable, Mapping
+from typing import TYPE_CHECKING, Callable, Iterable, Mapping
 
 from .models import PlaybackSource, StreamProtocol
+
+if TYPE_CHECKING:
+    from .health import SourceHealth
 
 
 @dataclass(frozen=True)
@@ -34,9 +37,16 @@ class PlaybackCoordinator:
         self,
         opener: Callable[[PlaybackSource], bool],
         health_scores: Mapping[str, float] | None = None,
+        health: "SourceHealth | None" = None,
     ) -> None:
         self._opener = opener
+        self._health = health
         self._health_scores = dict(health_scores or {})
+
+    def _score(self, source_id: str) -> float:
+        if self._health is not None:
+            return self._health.score(source_id)
+        return float(self._health_scores.get(source_id, 0.0))
 
     def ordered_sources(self, sources: Iterable[PlaybackSource]) -> list[PlaybackSource]:
         validated = list(sources)
@@ -47,7 +57,7 @@ class PlaybackCoordinator:
             key=lambda source: (
                 source.protocol is StreamProtocol.WEBVIEW,
                 not source.playable_native,
-                -float(self._health_scores.get(source.id, 0.0)),
+                -self._score(source.id),
                 self._PROTOCOL_PRIORITY[source.protocol],
                 source.quality or "",
                 source.id,
@@ -59,10 +69,16 @@ class PlaybackCoordinator:
         for source in self.ordered_sources(sources):
             try:
                 if self._opener(source):
+                    if self._health is not None:
+                        self._health.mark_success(source.id)
                     attempts.append(PlaybackAttempt(source.id, True))
                     return PlaybackResult(source, tuple(attempts))
+                if self._health is not None:
+                    self._health.mark_failure(source.id)
                 attempts.append(PlaybackAttempt(source.id, False, "opener rejected source"))
             except Exception as exc:
+                if self._health is not None:
+                    self._health.mark_failure(source.id)
                 attempts.append(PlaybackAttempt(source.id, False, str(exc)))
         return PlaybackResult(None, tuple(attempts))
 
