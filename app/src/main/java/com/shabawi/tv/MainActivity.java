@@ -18,6 +18,7 @@ import java.util.List;
 public final class MainActivity extends Activity {
     private final List<CatalogItem> catalog = CatalogRepository.seed();
     private final ProviderRegistry providers = new ProviderRegistry();
+    private final PlaybackCoordinator playback = new PlaybackCoordinator();
     private LinearLayout content;
 
     @Override public void onCreate(Bundle state) {
@@ -129,12 +130,20 @@ public final class MainActivity extends Activity {
         back.setOnClickListener(v -> showHome());
         root.addView(back, fullWidth());
         root.addView(text("التشغيل: " + title, 24, Color.rgb(212, 175, 55)), fullWidth());
-        root.addView(text("Native-first playback seam", 16, Color.LTGRAY), fullWidth());
-        for (PlaybackSource source : sources) {
-            TextView row = text(source.label + " · " + source.type + " · أولوية " + source.priority, 16, Color.WHITE);
+        root.addView(text("Native-first playback plan", 16, Color.LTGRAY), fullWidth());
+        PlaybackCoordinator.Candidate first = playback.firstPlayable(sources);
+        if (first == null) {
+            root.addView(text("لا يوجد مصدر قابل للتشغيل حاليًا", 18, Color.LTGRAY), fullWidth());
+        } else {
+            root.addView(text("المصدر المقترح: " + first.source.label + " · " + first.source.type, 18, Color.WHITE), fullWidth());
+        }
+        for (PlaybackCoordinator.Candidate candidate : playback.plan(sources)) {
+            PlaybackSource source = candidate.source;
+            String state = candidate.decision == PlaybackCoordinator.Decision.PLAY ? "مؤهل" : "مستبعد";
+            TextView row = text(source.label + " · " + source.type + " · " + state + " · أولوية " + source.priority, 16, Color.WHITE);
             root.addView(row, fullWidth());
         }
-        root.addView(text("المصادر التجريبية لا تُشغّل شبكة فعلية بعد؛ طبقة native player وhealth/fallback هي الخطوة التالية.", 16, Color.LTGRAY), fullWidth());
+        root.addView(text("المنسق يخطط للمصدر فقط؛ تشغيل native الفعلي وربط lifecycle/health/fallback هو الخطوة التالية.", 16, Color.LTGRAY), fullWidth());
         setContentView(wrap(root));
     }
 
